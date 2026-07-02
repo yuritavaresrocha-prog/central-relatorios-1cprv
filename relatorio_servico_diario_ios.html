@@ -61,6 +61,7 @@
     }
 
     button.secondary { background: #e5e7eb; color: #111827; }
+    button.danger { background: #9f1239; color: #fff; }
 
     .card {
       background: var(--card);
@@ -509,7 +510,10 @@
   <main class="page">
     <div class="toolbar">
       <button type="button" onclick="prepareAndPrint()">Gerar PDF (iOS/Safari)</button>
-      <button type="button" class="secondary" onclick="limparFormulario()">Limpar</button>
+      <button type="button" class="secondary" onclick="salvarRascunhoGuarnicao()">Salvar rascunho</button>
+      <button type="button" class="secondary" onclick="carregarRascunhoGuarnicao()">Carregar rascunho</button>
+      <button type="button" class="secondary" onclick="exportarDadosGuarnicao()">Exportar dados</button>
+      <button type="button" class="danger" onclick="limparFormulario()">Limpar</button>
     </div>
 
     <header class="card report-head">
@@ -803,6 +807,139 @@
           span.textContent = (el.value || '').trim() || EMPTY_SYMBOL;
         }
       });
+    }
+
+
+    const RASCUNHO_GUARNICAO_KEY = 'relatorio_servico_diario_1cprv_rascunho';
+
+    function obterValorCampo(id) {
+      const el = document.getElementById(id);
+      return el ? (el.value || '').trim() : '';
+    }
+
+    function obterValorOuPadrao(id) {
+      const el = document.getElementById(id);
+      if (!el) return '';
+      const valor = (el.value || '').trim();
+      return valor || el.getAttribute('data-default') || '';
+    }
+
+    function identificarDestinoCampo9() {
+      const bruto = [obterValorCampo('guarnicao'), obterValorCampo('guarnicaoComplemento')].join(' ');
+      const normalizado = normalizarChave(bruto);
+      if (normalizado.includes('base-01') || normalizado.includes('base-1')) return 'base01';
+      if (normalizado.includes('base-02') || normalizado.includes('base-2')) return 'base02';
+      if (normalizado.includes('tor') || normalizado.includes('tatico') || normalizado.includes('tatico-rodoviario')) return 'tatico';
+      return '';
+    }
+
+    function coletarCampo9Guarnicao() {
+      recalcularCamposAutomaticos();
+      const campo9 = {};
+      document.querySelectorAll('input[data-grupo][data-item]').forEach(input => {
+        const grupo = input.dataset.grupo || 'sem-grupo';
+        const item = input.dataset.item || '';
+        if (!item) return;
+        if (!campo9[grupo]) campo9[grupo] = {};
+        campo9[grupo][item] = input.value || '';
+      });
+      return campo9;
+    }
+
+    function coletarDadosGuarnicaoParaExportacao() {
+      return {
+        schema: 'bptrans-1cprv-guarnicao-v1',
+        tipo: 'relatorio_servico_diario_guarnicao',
+        geradoEm: new Date().toISOString(),
+        data: obterValorCampo('data'),
+        diaSemana: obterValorCampo('diaSemana'),
+        guarnicao: obterValorCampo('guarnicao'),
+        guarnicaoComplemento: obterValorCampo('guarnicaoComplemento'),
+        responsavel: obterValorCampo('responsavel'),
+        matricula: obterValorCampo('matricula'),
+        efetivo: obterValorCampo('efetivo'),
+        destinoCampo9: identificarDestinoCampo9(),
+        campo9: coletarCampo9Guarnicao(),
+        alteracoes: {
+          viatura: obterValorOuPadrao('altVtr'),
+          materialCarga: obterValorOuPadrao('altMaterial'),
+          ordemServico: obterValorOuPadrao('ordemServico')
+        }
+      };
+    }
+
+    function nomeArquivoDadosGuarnicao(payload) {
+      const data = payload.data || dataLocalArquivo();
+      const destino = payload.destinoCampo9 || normalizarChave(payload.guarnicao || 'guarnicao') || 'guarnicao';
+      return `${destino}_${data}_dados.json`;
+    }
+
+    function dataLocalArquivo() {
+      const d = new Date();
+      const ano = d.getFullYear();
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const dia = String(d.getDate()).padStart(2, '0');
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    function baixarJSON(nome, dados) {
+      const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nome;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportarDadosGuarnicao() {
+      const payload = coletarDadosGuarnicaoParaExportacao();
+      if (!payload.destinoCampo9) {
+        alert('Selecione a guarnição como Base 01, Base 02 ou TOR antes de exportar os dados.');
+        return;
+      }
+      baixarJSON(nomeArquivoDadosGuarnicao(payload), payload);
+    }
+
+    function coletarRascunhoGuarnicao() {
+      return Array.from(document.querySelectorAll('input, textarea, select')).map((el, i) => ({
+        i,
+        value: el.type === 'file' ? '' : el.value,
+        tag: el.tagName,
+        type: el.type || ''
+      }));
+    }
+
+    function salvarRascunhoGuarnicao(silencioso = false) {
+      try {
+        localStorage.setItem(RASCUNHO_GUARNICAO_KEY, JSON.stringify(coletarRascunhoGuarnicao()));
+        if (!silencioso) alert('Rascunho salvo neste navegador.');
+      } catch (e) {
+        if (!silencioso) alert('Não foi possível salvar o rascunho neste navegador.');
+      }
+    }
+
+    function carregarRascunhoGuarnicao() {
+      const raw = localStorage.getItem(RASCUNHO_GUARNICAO_KEY);
+      if (!raw) { alert('Nenhum rascunho salvo neste navegador.'); return; }
+      try {
+        const data = JSON.parse(raw);
+        const campos = Array.from(document.querySelectorAll('input, textarea, select'));
+        data.forEach(item => {
+          const el = campos[item.i];
+          if (!el || el.type === 'file') return;
+          el.value = item.value || '';
+        });
+        atualizarDiaSemana();
+        atualizarWatermarkOrdem();
+        recalcularCamposAutomaticos();
+        ajustarTextareas();
+        alert('Rascunho carregado.');
+      } catch (e) {
+        alert('Não foi possível carregar o rascunho salvo.');
+      }
     }
 
     function prepareAndPrint() {
