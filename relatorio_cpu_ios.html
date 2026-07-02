@@ -500,6 +500,8 @@
       <button type="button" onclick="prepareAndPrint()">Gerar PDF (iOS/Safari)</button>
       <button type="button" class="secondary" onclick="salvarRascunho()">Salvar rascunho</button>
       <button type="button" class="secondary" onclick="carregarRascunho()">Carregar rascunho</button>
+      <button type="button" class="secondary" onclick="document.getElementById('importarGuarnicoesJson').click()">Importar guarnições</button>
+      <input id="importarGuarnicoesJson" class="no-print" type="file" accept=".json,application/json" multiple style="display:none" onchange="importarDadosGuarnicoes(this.files); this.value='';" />
       <button type="button" class="danger" onclick="limparFormulario()">Limpar</button>
     </div>
 
@@ -829,15 +831,29 @@
       });
     }
 
-    function numericInput() {
-      return '<input class="field soma-campo" type="number" min="0" inputmode="numeric" /><span class="print-value"></span>';
+    function normalizarChaveCPSU(txt) {
+      return String(txt || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    }
+
+    function numericInput(attrs = '') {
+      return `<input class="field soma-campo" type="number" min="0" inputmode="numeric" ${attrs} /><span class="print-value"></span>`;
     }
 
     function renderSomatorio() {
       const body = document.getElementById('somatorioBody');
+      const colunas = ['base01', 'base02', 'cpu', 'tatico'];
       somatorio.forEach(([grupo, itens, azulGrupo]) => {
         itens.forEach((item, idx) => {
+          const grupoKey = normalizarChaveCPSU(grupo || 'sem-grupo');
+          const itemKey = normalizarChaveCPSU(item);
           const tr = document.createElement('tr');
+          tr.dataset.grupo = grupoKey;
+          tr.dataset.item = itemKey;
           if (azulGrupo) tr.classList.add('stripe');
           if (idx === 0 && grupo) {
             tr.innerHTML += `<td class="group" rowspan="${itens.length}">${grupo}</td>`;
@@ -845,7 +861,9 @@
             tr.innerHTML += '<td class="group"></td>';
           }
           tr.innerHTML += `<td class="item">${item}</td>`;
-          for (let i = 0; i < 4; i++) tr.innerHTML += `<td class="center num">${numericInput()}</td>`;
+          colunas.forEach(coluna => {
+            tr.innerHTML += `<td class="center num">${numericInput(`data-coluna="${coluna}" data-grupo="${grupoKey}" data-item="${itemKey}"`)}</td>`;
+          });
           tr.innerHTML += '<td class="center total-cell"><span class="print-value total-print">0</span><input class="field total-input" type="text" value="0" readonly /></td>';
           body.appendChild(tr);
         });
@@ -880,15 +898,15 @@
               <div class="unit-grid">
                 <div>
                   <label>Viatura</label>
-                  <textarea class="field" data-default="Sem alteração." placeholder="Sem alteração."></textarea><span class="print-text print-box"></span>
+                  <textarea class="field" data-unidade="${u.id}" data-tipo="viatura" data-default="Sem alteração." placeholder="Sem alteração."></textarea><span class="print-text print-box"></span>
                 </div>
                 <div>
                   <label>Material Carga</label>
-                  <textarea class="field" data-default="Sem alteração." placeholder="Sem alteração."></textarea><span class="print-text print-box"></span>
+                  <textarea class="field" data-unidade="${u.id}" data-tipo="materialCarga" data-default="Sem alteração." placeholder="Sem alteração."></textarea><span class="print-text print-box"></span>
                 </div>
                 <div>
                   <label>Ordem de Serviço</label>
-                  <textarea class="field" data-default="Realizou o policiamento conforme Ordem de Serviço sem alteração." placeholder="Relate se houve alteração no cumprimento da OS."></textarea><span class="print-text print-box"></span>
+                  <textarea class="field" data-unidade="${u.id}" data-tipo="ordemServico" data-default="Realizou o policiamento conforme Ordem de Serviço sem alteração." placeholder="Relate se houve alteração no cumprimento da OS."></textarea><span class="print-text print-box"></span>
                 </div>
               </div>
               <div class="secbar" style="margin-top:5px">
@@ -1059,6 +1077,126 @@
         data.push({ i, value: el.value, tag: el.tagName, type: el.type });
       });
       return data;
+    }
+
+
+    function valorNumericoImportado(valor) {
+      const n = parseInt(String(valor || '').replace(/\D/g, ''), 10);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function obterValorCampo9Importado(payload, grupo, item) {
+      return payload && payload.campo9 && payload.campo9[grupo] && payload.campo9[grupo][item] !== undefined
+        ? payload.campo9[grupo][item]
+        : '';
+    }
+
+    function definirCampo9Importado(coluna, grupo, item, valor) {
+      if (valor === undefined || valor === null || valor === '') return false;
+      const seletor = `#somatorioBody input.soma-campo[data-coluna="${coluna}"][data-grupo="${grupo}"][data-item="${item}"]`;
+      const input = document.querySelector(seletor);
+      if (!input) return false;
+      input.value = String(valor);
+      return true;
+    }
+
+    function somarImportados(payload, pares) {
+      return pares.reduce((acc, par) => acc + valorNumericoImportado(obterValorCampo9Importado(payload, par[0], par[1])), 0);
+    }
+
+    function aplicarAliasesCampo9(payload, coluna) {
+      const aliases = [
+        ['sinistros-sem-embriaguez', 'c-vitimas', 'sinistros-sem-embriaguez', 'c-vitimas-todos'],
+        ['acionamentos', 'bsts', 'acionamentos', 'bst-s'],
+        ['acionamentos', 'apoio-a-outras-unidades', 'acionamentos', 'vtrs-de-bst-em-apoio-a-outras-unidades-ou-orgaos'],
+        ['cnhs-e-etilometro', 'cnhs-recolhidas', 'sem-grupo', 'cnh-s-recolhidas'],
+        ['cnhs-e-etilometro', 'testes-de-etilometro-realizados', 'sem-grupo', 'quantidade-de-teste-de-etilometro-realizados'],
+        ['apreensoes', 'armas-de-fogo', 'apreensoes', 'armas'],
+        ['apreensoes', 'menores-infratores', 'apreensoes', 'menores'],
+        ['prisoes', 'porte-posse-de-armas', 'prisoes', 'porte-posse-armas'],
+        ['prisoes', 'porte-posse-de-drogas', 'prisoes', 'porte-posse-drogas'],
+        ['abordagens', 'check-points-blitz', 'abordagens', 'check-points-blitz']
+      ];
+
+      aliases.forEach(([gOrigem, iOrigem, gDestino, iDestino]) => {
+        const valor = obterValorCampo9Importado(payload, gOrigem, iOrigem);
+        definirCampo9Importado(coluna, gDestino, iDestino, valor);
+      });
+
+      const outrosAits = somarImportados(payload, [
+        ['notificacoes', 'demais-aits-com-abordagem'],
+        ['notificacoes', 'sem-abordagem']
+      ]);
+      if (outrosAits > 0) definirCampo9Importado(coluna, 'notificacoes', 'outros-ait-s-exceto-165-165a-230-xi', outrosAits);
+
+      const totalAits = obterValorCampo9Importado(payload, 'notificacoes', 'total-de-aits-lavrados');
+      definirCampo9Importado(coluna, 'notificacoes', 'total', totalAits);
+    }
+
+    function importarCampo9Guarnicao(payload, coluna) {
+      const campo9 = payload.campo9 || {};
+      Object.entries(campo9).forEach(([grupo, itens]) => {
+        Object.entries(itens || {}).forEach(([item, valor]) => {
+          definirCampo9Importado(coluna, grupo, item, valor);
+        });
+      });
+      aplicarAliasesCampo9(payload, coluna);
+      atualizarSomatorios();
+    }
+
+    function definirAlteracaoGuarnicao(unidade, tipo, valor) {
+      if (!valor) return;
+      const campo = document.querySelector(`textarea[data-unidade="${unidade}"][data-tipo="${tipo}"]`);
+      if (!campo) return;
+      campo.value = valor;
+    }
+
+    function importarAlteracoesGuarnicao(payload, unidade) {
+      const alt = payload.alteracoes || {};
+      definirAlteracaoGuarnicao(unidade, 'viatura', alt.viatura || '');
+      definirAlteracaoGuarnicao(unidade, 'materialCarga', alt.materialCarga || '');
+      definirAlteracaoGuarnicao(unidade, 'ordemServico', alt.ordemServico || '');
+    }
+
+    function unidadeDestinoImportacao(payload) {
+      const destino = payload.destinoCampo9 || '';
+      if (destino === 'base01') return 'base01';
+      if (destino === 'base02') return 'base02';
+      if (destino === 'tatico') return 'tatico';
+      return '';
+    }
+
+    async function importarDadosGuarnicoes(files) {
+      if (!files || !files.length) return;
+      let importados = 0;
+      let ignorados = 0;
+
+      for (const file of Array.from(files)) {
+        try {
+          const texto = await file.text();
+          const payload = JSON.parse(texto);
+          if (!payload || payload.schema !== 'bptrans-1cprv-guarnicao-v1') {
+            ignorados++;
+            continue;
+          }
+
+          const unidade = unidadeDestinoImportacao(payload);
+          if (!unidade) {
+            ignorados++;
+            continue;
+          }
+
+          importarCampo9Guarnicao(payload, unidade);
+          importarAlteracoesGuarnicao(payload, unidade);
+          importados++;
+        } catch (e) {
+          ignorados++;
+        }
+      }
+
+      ajustarTextareas();
+      prepararCampos();
+      alert(`Importação concluída. Relatórios importados: ${importados}. Ignorados: ${ignorados}.`);
     }
 
     function salvarRascunho() {
