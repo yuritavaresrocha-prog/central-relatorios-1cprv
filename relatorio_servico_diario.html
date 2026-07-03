@@ -678,7 +678,7 @@
       ['Sinistros sem embriaguez', ['C/ vítimas', 'C/ vítimas (s/ CNH)', 'S/ vítimas (menores)', 'S/ vítimas (VTR PMPB)', 'Atropelamento', 'Outros']],
       ['Sinistros por embriaguez', ['C/ vítimas', 'S/ vítimas', 'Atropelamento', 'Outros']],
       ['Acionamentos', ['BSTs', 'Apoio a outras unidades']],
-      ['Notificações', ['Art. 165', 'Art. 165-A', 'Art. 230 XI', 'Demais AITs com abordagem', 'Sem abordagem', 'Total de AITs lavrados']],
+      ['Notificações', ['Art. 165', 'Art. 165-A', 'Art. 230 XI', 'Demais AITs com abordagem', 'AITs sem abordagem', 'Total de AITs lavrados']],
       ['CNHs e etilômetro', ['CNHs recolhidas', 'Testes de etilômetro realizados']],
       ['Apreensões', ['Armas de fogo', 'Drogas', 'Menores infratores', 'SIVA-R', 'Sinais']],
       ['Prisões', ['Embriaguez no trânsito', 'Sinistro de trânsito', 'Porte/posse de armas', 'Porte/posse de drogas', 'Mandado de prisão', 'SIVA-R', 'Sinais', 'TCO - SASP', 'Outros']],
@@ -688,6 +688,54 @@
     const conecta = [
       ['Conecta', ['Quantidade de ocorrências (acionamentos + demanda espontânea)', 'Adulto preso (flagrante)', 'Adulto preso (TCO)', 'Menores apreendidos (flagrante)', 'Menores apreendidos (TCO)', 'TCO - SASP']]
     ];
+
+
+
+    /* Máscara automática para campos de hora/horário no padrão HH:MM */
+    function formatarHorarioValor(valor, finalizar = false) {
+      let nums = String(valor || '').replace(/\D/g, '').slice(0, 4);
+      if (!nums) return '';
+      if (!finalizar) {
+        if (nums.length <= 2) return nums;
+        return `${nums.slice(0, 2)}:${nums.slice(2)}`;
+      }
+      if (nums.length === 1) nums = `0${nums}00`;
+      else if (nums.length === 2) nums = `${nums}00`;
+      else if (nums.length === 3) nums = `${nums.slice(0, 2)}0${nums.slice(2)}`;
+      const h = Math.min(parseInt(nums.slice(0, 2), 10) || 0, 23);
+      const m = Math.min(parseInt(nums.slice(2, 4), 10) || 0, 59);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function campoPareceHorario(el) {
+      if (!el || el.tagName !== 'INPUT') return false;
+      if (['date', 'number', 'hidden', 'file', 'checkbox', 'radio'].includes(el.type)) return false;
+      const textos = [el.id, el.name, el.placeholder, el.getAttribute('aria-label')].filter(Boolean).join(' ');
+      if (/(^|\b)(hora|horario|horário|horas|hh:mm)(\b|$)/i.test(textos)) return true;
+      const label = el.closest('div')?.querySelector('label');
+      if (label && /(^|\b)(hora|horario|horário|horas)(\b|$)/i.test(label.textContent || '')) return true;
+      const td = el.closest('td');
+      const tr = el.closest('tr');
+      const table = el.closest('table');
+      if (td && tr && table) {
+        const idx = Array.from(tr.children).indexOf(td);
+        const th = table.querySelector(`thead tr th:nth-child(${idx + 1})`);
+        if (th && /(^|\b)(hora|horario|horário|horas)(\b|$)/i.test(th.textContent || '')) return true;
+      }
+      return false;
+    }
+
+    function aplicarMascaraHorario(root = document) {
+      root.querySelectorAll('input').forEach(el => {
+        if (!campoPareceHorario(el) || el.dataset.horarioMask === '1') return;
+        el.dataset.horarioMask = '1';
+        el.inputMode = 'numeric';
+        el.maxLength = 5;
+        if (!el.placeholder) el.placeholder = 'hh:mm';
+        el.addEventListener('input', () => { el.value = formatarHorarioValor(el.value, false); });
+        el.addEventListener('blur', () => { el.value = formatarHorarioValor(el.value, true); });
+      });
+    }
 
     function normalizarChave(txt) {
       return String(txt || '')
@@ -747,7 +795,7 @@
         'art-165-a',
         'art-230-xi',
         'demais-aits-com-abordagem',
-        'sem-abordagem'
+        'aits-sem-abordagem'
       ];
       let total = 0;
       itensSomatorio.forEach(item => {
@@ -881,7 +929,7 @@
         guarnicao: obterValorCampo('guarnicao'),
         guarnicaoComplemento: obterValorCampo('guarnicaoComplemento'),
         responsavel: obterValorCampo('responsavel'),
-        matricula: obterValorCampo('matricula'),
+        matricula: obterValorCampo('matriculaResponsavel'),
         efetivo: obterValorCampo('efetivo'),
         destinoCampo9: identificarDestinoCampo9(),
         campo9: coletarCampo9Guarnicao(),
@@ -929,6 +977,7 @@
     }
 
     function exportarDadosGuarnicao() {
+      memorizarResponsavelGuarnicao();
       const payload = coletarDadosGuarnicaoParaExportacao();
       if (!payload.destinoCampo9) {
         alert('Selecione a guarnição como Base 01, Base 02 ou TOR antes de exportar os dados.');
@@ -947,6 +996,7 @@
     }
 
     function salvarRascunhoGuarnicao(silencioso = false) {
+      memorizarResponsavelGuarnicao();
       try {
         localStorage.setItem(RASCUNHO_GUARNICAO_KEY, JSON.stringify(coletarRascunhoGuarnicao()));
         if (!silencioso) alert('Rascunho salvo neste navegador.');
@@ -977,6 +1027,7 @@
     }
 
     function prepareAndPrint() {
+      memorizarResponsavelGuarnicao();
       atualizarDiaSemana();
       ajustarTextareas();
       prepararCamposParaImpressao();
@@ -1065,6 +1116,122 @@
       campo.value = formatada;
     }
 
+
+
+    /* =========================================================
+       MEMÓRIA DE PREENCHIMENTO AUTOMÁTICO - GUARNIÇÕES
+       Salva apenas dados cadastrais/estáveis do responsável.
+       Não salva estatísticas nem ocorrências do serviço.
+    ========================================================= */
+    const MEMORIA_RESPONSAVEIS_GUARNICAO_KEY = 'memoria_responsaveis_guarnicao_1cprv_v1';
+
+    function normalizarNomeMemoria(valor) {
+      return String(valor || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function lerMemoriaResponsaveisGuarnicao() {
+      try {
+        return JSON.parse(localStorage.getItem(MEMORIA_RESPONSAVEIS_GUARNICAO_KEY) || '{}') || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function salvarMemoriaResponsaveisGuarnicao(memoria) {
+      try {
+        localStorage.setItem(MEMORIA_RESPONSAVEIS_GUARNICAO_KEY, JSON.stringify(memoria || {}));
+      } catch (e) {}
+    }
+
+    function garantirDatalistMemoria(id) {
+      let lista = document.getElementById(id);
+      if (!lista) {
+        lista = document.createElement('datalist');
+        lista.id = id;
+        document.body.appendChild(lista);
+      }
+      return lista;
+    }
+
+    function atualizarListaResponsaveisGuarnicao() {
+      const lista = garantirDatalistMemoria('listaResponsaveisGuarnicao');
+      const memoria = lerMemoriaResponsaveisGuarnicao();
+      const nomes = Object.values(memoria)
+        .map(p => p && p.responsavel)
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+      lista.innerHTML = nomes.map(nome => `<option value="${String(nome).replace(/"/g, '&quot;')}"></option>`).join('');
+      const responsavel = document.getElementById('responsavel');
+      if (responsavel) responsavel.setAttribute('list', 'listaResponsaveisGuarnicao');
+    }
+
+    function memorizarResponsavelGuarnicao() {
+      const responsavelEl = document.getElementById('responsavel');
+      if (!responsavelEl) return;
+      const responsavel = responsavelEl.value.trim();
+      const chave = normalizarNomeMemoria(responsavel);
+      if (chave.length < 3) return;
+
+      const memoria = lerMemoriaResponsaveisGuarnicao();
+      memoria[chave] = {
+        responsavel,
+        matricula: obterValorCampo('matriculaResponsavel'),
+        guarnicao: obterValorCampo('guarnicao'),
+        guarnicaoComplemento: obterValorCampo('guarnicaoComplemento'),
+        efetivo: obterValorCampo('efetivo'),
+        atualizadoEm: new Date().toISOString()
+      };
+      salvarMemoriaResponsaveisGuarnicao(memoria);
+      atualizarListaResponsaveisGuarnicao();
+    }
+
+    function aplicarPerfilResponsavelGuarnicao() {
+      const responsavelEl = document.getElementById('responsavel');
+      if (!responsavelEl) return;
+      const chave = normalizarNomeMemoria(responsavelEl.value);
+      const perfil = lerMemoriaResponsaveisGuarnicao()[chave];
+      if (!perfil) return;
+
+      const preencherSeVazio = (id, valor) => {
+        const el = document.getElementById(id);
+        if (el && !String(el.value || '').trim() && valor !== undefined && valor !== null) el.value = valor;
+      };
+
+      preencherSeVazio('matriculaResponsavel', perfil.matricula);
+      preencherSeVazio('guarnicao', perfil.guarnicao);
+      preencherSeVazio('guarnicaoComplemento', perfil.guarnicaoComplemento);
+      preencherSeVazio('efetivo', perfil.efetivo);
+      formatarMatriculaResponsavel();
+      atualizarDiaSemana();
+    }
+
+    function configurarAutopreenchimentoGuarnicao() {
+      atualizarListaResponsaveisGuarnicao();
+      const responsavel = document.getElementById('responsavel');
+      if (responsavel && responsavel.dataset.memoriaAuto !== '1') {
+        responsavel.dataset.memoriaAuto = '1';
+        responsavel.addEventListener('change', aplicarPerfilResponsavelGuarnicao);
+        responsavel.addEventListener('blur', () => {
+          aplicarPerfilResponsavelGuarnicao();
+          memorizarResponsavelGuarnicao();
+        });
+      }
+
+      ['matriculaResponsavel', 'guarnicao', 'guarnicaoComplemento', 'efetivo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.dataset.memoriaAuto !== '1') {
+          el.dataset.memoriaAuto = '1';
+          el.addEventListener('change', memorizarResponsavelGuarnicao);
+          el.addEventListener('blur', memorizarResponsavelGuarnicao);
+        }
+      });
+    }
+
     document.addEventListener('input', e => {
       if (e.target && e.target.matches('input[type="number"]')) {
         recalcularCamposAutomaticos(e.target);
@@ -1075,6 +1242,7 @@
     });
 
     renderizarTabelas();
+    configurarAutopreenchimentoGuarnicao();
     recalcularCamposAutomaticos();
     preencherDataHoje();
     atualizarWatermarkOrdem();
