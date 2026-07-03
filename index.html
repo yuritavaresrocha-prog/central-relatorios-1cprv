@@ -3,231 +3,232 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
-  <title>Central de Relatórios - BPTRAN / 1ª CPRv</title>
+  <title>Central de Relatórios - 1ª CPRv / BPTRAN</title>
 
   <style>
     :root {
-      --bg: #f3f6f8;
-      --card: #ffffff;
-      --text: #1f2937;
+      --azul: #0f4c81;
+      --azul-escuro: #0b355a;
+      --azul-claro: #e8f1fb;
+      --cinza-bg: #f3f6f9;
+      --cinza-borda: #d6dee8;
+      --texto: #111827;
       --muted: #64748b;
-      --line: #d8e0e7;
-      --accent: #0f6f8f;
-      --accent2: #0f766e;
-      --soft: #e8f5f8;
-      --shadow: 0 8px 20px rgba(15, 23, 42, .08);
+      --branco: #ffffff;
+      --verde: #0f766e;
+      --vermelho: #9f1239;
     }
 
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
+      background: var(--cinza-bg);
+      color: var(--texto);
       line-height: 1.35;
     }
 
     .page {
-      width: min(920px, 100%);
+      width: min(1100px, 100%);
       margin: 0 auto;
       padding: 14px;
     }
 
     header {
-      background: #ffffff;
-      color: var(--text);
-      border: 1px solid var(--line);
+      background: var(--branco);
+      border: 1px solid var(--cinza-borda);
       border-radius: 18px;
-      padding: 18px 16px 16px;
-      box-shadow: var(--shadow);
+      padding: 22px 14px;
       text-align: center;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 14px;
     }
 
-    .crest {
-      width: 76px;
+    .brasao {
+      width: 82px;
       height: auto;
       display: block;
-      margin: 0 auto 8px;
-      background: #fff;
+      margin: 0 auto 10px;
     }
 
-    .unit {
+    .orgao {
       font-size: 13px;
       font-weight: 800;
-      letter-spacing: .55px;
+      letter-spacing: .4px;
       text-transform: uppercase;
-      color: #334155;
+      color: var(--azul-escuro);
     }
 
     h1 {
-      margin: 4px 0 5px;
-      font-size: 23px;
-      line-height: 1.08;
+      margin: 6px 0 4px;
+      font-size: 25px;
+      line-height: 1.1;
+      color: var(--azul-escuro);
       text-transform: uppercase;
-      letter-spacing: .7px;
-      color: #0f172a;
+      letter-spacing: .3px;
     }
 
     .subtitle {
-      margin: 0 auto;
-      max-width: 680px;
       color: var(--muted);
-      font-size: 12.5px;
+      font-size: 14px;
+      margin-top: 4px;
     }
 
-    .toolbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      margin: 12px 0;
+    .search-card {
+      background: var(--branco);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
     }
 
-    .search {
+    .search-card label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: .2px;
+    }
+
+    #searchInput {
       width: 100%;
-      border: 1px solid var(--line);
+      border: 1px solid var(--cinza-borda);
       border-radius: 12px;
-      padding: 11px 12px;
-      font: inherit;
+      padding: 12px;
+      font-size: 15px;
       outline: none;
       background: #fff;
-      color: var(--text);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, .04);
     }
 
-    .search:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(15, 111, 143, .14);
+    #searchInput:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, .12);
     }
 
-    button {
-      font-family: inherit;
-    }
-
-    .small-btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-weight: 800;
-      background: #e5e7eb;
-      color: #111827;
-      cursor: pointer;
-      white-space: nowrap;
+    .section-title {
+      margin: 18px 2px 10px;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--azul-escuro);
+      text-transform: uppercase;
+      letter-spacing: .25px;
+      border-left: 5px solid var(--azul);
+      padding-left: 8px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
     .card {
-      background: var(--card);
-      border: 1px solid var(--line);
+      background: var(--branco);
+      border: 1px solid var(--cinza-borda);
       border-radius: 16px;
-      padding: 13px;
-      box-shadow: 0 3px 14px rgba(15, 23, 42, .05);
-    }
-
-    .card-head {
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 7px;
+      flex-direction: column;
+      min-height: 190px;
     }
 
-    h2 {
-      margin: 0;
-      font-size: 16px;
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: var(--azul-escuro);
       line-height: 1.15;
-      color: #0f172a;
-      text-transform: uppercase;
-      letter-spacing: .25px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .tag {
-      flex: none;
-      border: 1px solid var(--line);
+      display: inline-block;
+      margin: 8px 0 10px;
+      background: var(--azul-claro);
+      color: var(--azul-escuro);
+      border: 1px solid #c6dbf2;
       border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--accent);
-      background: var(--soft);
-      text-transform: uppercase;
-    }
-
-    .desc {
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .links {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .link-card {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 7px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      padding: 10px;
-      background: #fbfdff;
-      min-height: 116px;
-    }
-
-    .link-title {
-      font-weight: 800;
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.2;
-    }
-
-    .link-sub {
+      padding: 5px 9px;
       font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
+      font-weight: 800;
+      text-transform: uppercase;
+      width: fit-content;
     }
 
+    .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+    }
+
+    button,
     .btn {
       border: 0;
       border-radius: 10px;
-      padding: 9px 10px;
+      padding: 10px 12px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
-      font-size: 12px;
-      color: #fff;
-      background: var(--accent);
       text-decoration: none;
+      color: #fff;
+      background: var(--azul);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
-      width: 100%;
+      min-height: 40px;
+      flex: 1 1 auto;
+      text-align: center;
     }
 
-    .btn.ios {
-      background: var(--accent2);
+    .btn:hover {
+      background: var(--azul-escuro);
     }
 
-    .footer {
+    .btn-ios {
+      background: var(--verde);
+    }
+
+    .btn-ios:hover {
+      background: #0b5f58;
+    }
+
+    .btn-tool {
+      background: #334155;
+    }
+
+    .btn-tool:hover {
+      background: #1f2937;
+    }
+
+    .btn-danger {
+      background: var(--vermelho);
+    }
+
+    footer {
+      margin: 20px 0 6px;
       text-align: center;
       color: var(--muted);
-      font-size: 11px;
-      margin: 12px 0 3px;
+      font-size: 12px;
     }
 
-    @media (max-width: 720px) {
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 780px) {
       .page {
         padding: 10px;
       }
@@ -236,25 +237,20 @@
         font-size: 20px;
       }
 
-      .toolbar {
+      .grid {
         grid-template-columns: 1fr;
       }
 
-      .card-head {
-        display: block;
-      }
-
-      .tag {
-        display: inline-block;
-        margin-top: 7px;
-      }
-
-      .links {
-        grid-template-columns: 1fr;
-      }
-
-      .link-card {
+      .card {
         min-height: auto;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
       }
     }
   </style>
@@ -263,152 +259,101 @@
 <body>
   <main class="page">
     <header>
-      <img class="crest" src="brasao.png" alt="Brasão da PMPB" onerror="this.style.display='none'" />
-      <div class="unit">BPTRAN / 1ª CPRv</div>
+      <img class="brasao" src="brasao.png" alt="Brasão da PMPB" onerror="this.style.display='none'" />
+      <div class="orgao">Polícia Militar da Paraíba • BPTRAN • 1ª CPRv</div>
       <h1>Central de Relatórios</h1>
-      <p class="subtitle">Selecione o relatório desejado para preenchimento no navegador.</p>
+      <div class="subtitle">Acesso rápido aos formulários operacionais da 1ª Companhia de Polícia Rodoviária</div>
     </header>
 
-    <div class="toolbar">
-      <input
-        id="busca"
-        class="search"
-        type="search"
-        placeholder="Buscar relatório..."
-        oninput="renderizar()"
-      />
-      <button class="small-btn" type="button" onclick="limparBusca()">Limpar busca</button>
-    </div>
+    <section class="search-card">
+      <label for="searchInput">Pesquisar relatório ou ferramenta</label>
+      <input id="searchInput" type="search" placeholder="Ex.: CPU, Serviço Diário, Fisco, Remoção, JSON..." oninput="filtrarCards()" />
+    </section>
 
-    <section id="lista" class="grid" aria-live="polite"></section>
+    <div class="section-title">Relatórios principais</div>
 
-    <div class="footer">
-      Central de acesso a relatórios operacionais • BPTRAN / 1ª CPRv
-    </div>
+    <section class="grid">
+      <article class="card item-card" data-search="serviço diario guarnição guarnições base tor relatorio json exportar">
+        <h2>Relatório de Serviço Diário</h2>
+        <p>Relatório das guarnições, bases e equipes de serviço. Possui rascunho local, geração de PDF e exportação JSON para alimentar o relatório do CPU/CPSU.</p>
+        <span class="tag">Guarnições</span>
+        <div class="actions">
+          <a class="btn" href="relatorio_servico_diario.html">Abrir HTML</a>
+          <a class="btn btn-ios" href="relatorio_servico_diario_ios.html">Abrir iOS</a>
+        </div>
+      </article>
+
+      <article class="card item-card" data-search="cpu cpsu relatorio operacional serviço 24h importação json campo 9 p3">
+        <h2>Relatório Operacional CPU/CPSU</h2>
+        <p>Relatório consolidado do serviço. Permite importar JSON das guarnições e de campos P3, salvar rascunho, preencher dados ao longo do serviço e gerar PDF.</p>
+        <span class="tag">CPU / CPSU</span>
+        <div class="actions">
+          <a class="btn" href="relatorio_cpu.html">Abrir HTML</a>
+          <a class="btn btn-ios" href="relatorio_cpu_ios.html">Abrir iOS</a>
+        </div>
+      </article>
+
+      <article class="card item-card" data-search="fisco estadual acionamento ocorrência sefaz relatório fotos">
+        <h2>Relatório de Acionamento do Fisco Estadual</h2>
+        <p>Relatório individual para cada ocorrência ou acionamento relacionado ao Fisco Estadual, com campos de relato, envolvidos, veículo, material e fotos.</p>
+        <span class="tag">Fisco Estadual</span>
+        <div class="actions">
+          <a class="btn" href="relatorio_fisco.html">Abrir HTML</a>
+          <a class="btn btn-ios" href="relatorio_fisco_ios.html">Abrir iOS</a>
+        </div>
+      </article>
+
+      <article class="card item-card" data-search="auto remoção veiculo veículo apreensão entrega destino recebedor assinatura foto">
+        <h2>Auto Interno de Remoção e Entrega de Veículo</h2>
+        <p>Controle interno de veículos removidos, com destino, recebedor, assinatura em tela, foto opcional e impressão com dois autos por página.</p>
+        <span class="tag">Remoção de Veículos</span>
+        <div class="actions">
+          <a class="btn" href="auto_remocao_veiculos.html">Abrir HTML</a>
+          <a class="btn btn-ios" href="auto_remocao_veiculos_ios.html">Abrir iOS</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-title">Ferramentas de apoio</div>
+
+    <section class="grid">
+      <article class="card item-card" data-search="gerador json p3 campo 1 2 3 4 5 6 8 estatisticas">
+        <h2>Gerador JSON dos Campos P3</h2>
+        <p>Ferramenta para gerar arquivos JSON dos Campos 1, 2, 3, 4, 5, 6 e 8, permitindo importação posterior no Relatório CPU/CPSU.</p>
+        <span class="tag">JSON / P3</span>
+        <div class="actions">
+          <a class="btn btn-tool" href="gerador_json_campos_p3_1cprv.html">Abrir ferramenta</a>
+        </div>
+      </article>
+
+      <article class="card item-card" data-search="guia manual instruções passo a passo preencher pdf json assinatura">
+        <h2>Guia Interativo de Uso</h2>
+        <p>Manual simples com passo a passo para preenchimento dos relatórios, geração de PDF, assinatura, exportação e importação de JSON.</p>
+        <span class="tag">Manual</span>
+        <div class="actions">
+          <a class="btn btn-tool" href="guia_interativo_relatorios_1cprv.html">Abrir guia</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      1ª CPRv / BPTRAN • Central de Relatórios Operacionais
+    </footer>
   </main>
 
   <script>
-    const RELATORIOS = [
-      {
-        titulo: 'Relatório de Serviço Diário',
-        etiqueta: 'Guarnições',
-        descricao: 'Relatório diário das guarnições, com produção operacional, informações para o Conecta, alterações, ordem de serviço, observações e assinatura.',
-        formatos: [
-          {
-            nome: 'Formulário Online (HTML)',
-            detalhe: 'Versão para navegador em computador ou Android/Chrome.',
-            url: 'relatorio_servico_diario.html',
-            classe: ''
-          },
-          {
-            nome: 'Formulário Online (iOS)',
-            detalhe: 'Versão ajustada para Safari ou navegador padrão do iPhone.',
-            url: 'relatorio_servico_diario_ios.html',
-            classe: 'ios'
-          }
-        ]
-      },
-      {
-        titulo: 'Relatório de Acionamento do Fisco Estadual',
-        etiqueta: 'Fisco',
-        descricao: 'Relatório de acionamento, local, relato, envolvidos, material, veículo, desfecho, observações e fotos do atendimento.',
-        formatos: [
-          {
-            nome: 'Formulário Online (HTML)',
-            detalhe: 'Versão para navegador em computador ou Android/Chrome.',
-            url: 'relatorio_fisco.html',
-            classe: ''
-          },
-          {
-            nome: 'Formulário Online (iOS)',
-            detalhe: 'Versão ajustada para Safari ou navegador padrão do iPhone.',
-            url: 'relatorio_fisco_ios.html',
-            classe: 'ios'
-          }
-        ]
-      },
-      {
-        titulo: 'Relatório de CPSU',
-        etiqueta: 'CPSU',
-        descricao: 'Relatório operacional de serviço do CPSU, com CPU, permanente, estatísticas, somatórios, alterações durante o serviço, anexos e passagem de serviço.',
-        formatos: [
-          {
-            nome: 'Formulário Online (HTML)',
-            detalhe: 'Versão para navegador em computador ou Android/Chrome.',
-            url: 'relatorio_cpu.html',
-            classe: ''
-          },
-          {
-            nome: 'Formulário Online (iOS)',
-            detalhe: 'Versão ajustada para Safari ou navegador padrão do iPhone.',
-            url: 'relatorio_cpu_ios.html',
-            classe: 'ios'
-          }
-        ]
-      }
-    ];
+    function filtrarCards() {
+      const termo = document.getElementById('searchInput').value.trim().toLowerCase();
+      const cards = document.querySelectorAll('.item-card');
 
-    function renderizar() {
-      const lista = document.getElementById('lista');
-      const termo = document.getElementById('busca').value.trim().toLowerCase();
+      cards.forEach(card => {
+        const texto = (
+          card.innerText + ' ' + (card.getAttribute('data-search') || '')
+        ).toLowerCase();
 
-      lista.innerHTML = '';
-
-      const filtrados = RELATORIOS.filter(relatorio => {
-        const texto = [
-          relatorio.titulo,
-          relatorio.etiqueta,
-          relatorio.descricao,
-          ...relatorio.formatos.flatMap(f => [f.nome, f.detalhe])
-        ].join(' ').toLowerCase();
-
-        return !termo || texto.includes(termo);
-      });
-
-      if (!filtrados.length) {
-        lista.innerHTML = `
-          <article class="card">
-            <h2>Nenhum relatório encontrado</h2>
-            <p class="desc">Tente buscar por outro termo.</p>
-          </article>
-        `;
-        return;
-      }
-
-      filtrados.forEach(relatorio => {
-        const card = document.createElement('article');
-        card.className = 'card';
-
-        const formatos = relatorio.formatos.map(formato => `
-          <div class="link-card">
-            <div>
-              <div class="link-title">${formato.nome}</div>
-              <div class="link-sub">${formato.detalhe}</div>
-            </div>
-            <div></div>
-            <a class="btn ${formato.classe}" href="${formato.url}">Abrir</a>
-          </div>
-        `).join('');
-
-        card.innerHTML = `
-          <div class="card-head">
-            <h2>${relatorio.titulo}</h2>
-            <span class="tag">${relatorio.etiqueta}</span>
-          </div>
-          <p class="desc">${relatorio.descricao}</p>
-          <div class="links">${formatos}</div>
-        `;
-
-        lista.appendChild(card);
+        card.classList.toggle('hidden', termo && !texto.includes(termo));
       });
     }
-
-    function limparBusca() {
-      document.getElementById('busca').value = '';
-      renderizar();
-    }
-
-    renderizar();
   </script>
 </body>
 </html>
