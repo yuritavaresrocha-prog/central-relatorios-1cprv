@@ -2,9 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
-  <title>Relatório de Serviço Diário - BPTRAN / 1ª CPRV - iOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Serviço Diário - BPTRAN / 1ª CPRV</title>
   <style>
     :root {
       --accent: #0f6f8f;
@@ -16,12 +15,7 @@
       --card: #ffffff;
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-    html {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -116,8 +110,6 @@
     }
 
     input, select, textarea {
-      -webkit-appearance: none;
-      appearance: none;
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 7px;
@@ -278,24 +270,6 @@
       padding: 8px;
       background: #fff;
       line-height: 1.25;
-    }
-
-
-
-    .print-signature {
-      display: none;
-      width: 100%;
-      height: 96px;
-      object-fit: contain;
-      background: #fff;
-    }
-
-    .ios-print-help {
-      display: none;
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 11px;
-      text-align: center;
     }
 
     @media (max-width: 760px) {
@@ -460,55 +434,12 @@
       }
     }
 
-
-    /* AJUSTES ESPECÍFICOS PARA iOS/SAFARI
-       Força a impressão em largura A4, evita aumento automático de fonte
-       e transforma a assinatura em imagem antes de imprimir. */
-    @media print {
-      html, body {
-        width: 210mm !important;
-        min-width: 210mm !important;
-        max-width: 210mm !important;
-        overflow: visible !important;
-        -webkit-text-size-adjust: 100% !important;
-        text-size-adjust: 100% !important;
-      }
-      .page {
-        width: 202mm !important;
-        min-width: 202mm !important;
-        max-width: 202mm !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      table {
-        table-layout: fixed !important;
-        width: 100% !important;
-      }
-      th, td, .print-text, .print-value {
-        overflow-wrap: anywhere !important;
-        -webkit-hyphens: none !important;
-        hyphens: none !important;
-      }
-      .signature-box {
-        min-height: 40px !important;
-      }
-      .signature-box canvas {
-        display: none !important;
-      }
-      .print-signature {
-        display: block !important;
-        height: 38px !important;
-      }
-      .print-signature.empty {
-        visibility: hidden !important;
-      }
-    }
-
   
 
     /* AJUSTE FINAL - FONTES MAIORES NO PDF, MANTENDO O SERVIÇO DIÁRIO EM 1 PÁGINA */
+    /* AJUSTE FINAL - FONTE DE IMPRESSÃO DO SERVIÇO DIÁRIO AUMENTADA */
     @media print {
-      @page { size: A4 portrait; margin: 3mm !important; }
+      @page { size: A4 portrait; margin: 2.5mm !important; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       html, body {
         width: 210mm !important;
@@ -516,27 +447,27 @@
         overflow: visible !important;
         background: #fff !important;
       }
-      body { font-size: 8.25px !important; line-height: 1.08 !important; }
-      .page { width: 204mm !important; max-width: 204mm !important; padding: 0 !important; margin: 0 auto !important; }
+      body { font-size: 8.55px !important; line-height: 1.06 !important; }
+      .page { width: 205mm !important; max-width: 205mm !important; padding: 0 !important; margin: 0 auto !important; }
       .toolbar, .sig-actions, .hint, button { display: none !important; }
       .card {
         box-shadow: none !important;
         border-radius: 0 !important;
-        padding: 1.6px !important;
-        margin-bottom: 1px !important;
+        padding: 1.3px !important;
+        margin-bottom: 0.8px !important;
         break-inside: auto !important;
         page-break-inside: auto !important;
       }
-      .report-head { padding: 1.5px !important; break-inside: avoid !important; }
-      .brasao { width: 31px !important; margin: 0 auto 0.5px auto !important; }
-      .brand { font-size: 9.8px !important; line-height: 1 !important; margin: 0 !important; }
-      h1 { font-size: 11.25px !important; line-height: 1 !important; margin: 1px 0 1.5px 0 !important; }
+      .report-head { padding: 1px !important; break-inside: avoid !important; }
+      .brasao { width: 30px !important; margin: 0 auto 0.3px auto !important; }
+      .brand { font-size: 10.25px !important; line-height: 1 !important; margin: 0 !important; }
+      h1 { font-size: 11.75px !important; line-height: 1 !important; margin: 0.6px 0 1.2px 0 !important; }
       .head-grid {
         grid-template-columns: .82fr 1fr .72fr .9fr 1.35fr .78fr .6fr !important;
-        gap: 1.2px !important;
+        gap: 1px !important;
         align-items: end !important;
       }
-      label { font-size: 7px !important; line-height: 1 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
+      label { font-size: 7.25px !important; line-height: 1 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
       input, select, textarea { display: none !important; }
       .print-value, .print-text, .print-select {
         display: block !important;
@@ -548,13 +479,13 @@
         border: 1px solid var(--line) !important;
         border-radius: 2px !important;
         padding: 1px 2px !important;
-        font-size: 7.35px !important;
-        line-height: 1.06 !important;
+        font-size: 7.7px !important;
+        line-height: 1.04 !important;
       }
       .section-title {
-        font-size: 8.45px !important;
+        font-size: 8.85px !important;
         line-height: 1 !important;
-        margin: 0.8px 0 1px 0 !important;
+        margin: 0.6px 0 0.8px 0 !important;
         border-left-width: 2px !important;
         padding-left: 2px !important;
         letter-spacing: 0 !important;
@@ -562,11 +493,11 @@
       .metrics-grid {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 1.2px !important;
+        gap: 1px !important;
         align-items: start !important;
       }
       .metric-group {
-        font-size: 7.15px !important;
+        font-size: 7.45px !important;
         line-height: 1 !important;
         margin: 0 !important;
         break-inside: auto !important;
@@ -578,48 +509,275 @@
         line-height: 1 !important;
         vertical-align: middle !important;
       }
-      .metric-group th { font-size: 6.75px !important; line-height: 1 !important; letter-spacing: 0 !important; }
+      .metric-group th { font-size: 7.0px !important; line-height: 1 !important; letter-spacing: 0 !important; }
       .metric-group td.qtd { width: 20px !important; min-width: 20px !important; padding: 0 !important; }
       .print-value {
         min-height: 7px !important;
         line-height: 1 !important;
-        font-size: 7.25px !important;
+        font-size: 7.55px !important;
         text-align: center !important;
         font-weight: 800 !important;
       }
       .text-grid {
         display: grid !important;
         grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 1.2px !important;
+        gap: 1px !important;
       }
       .text-grid .full { grid-column: 1 / -1 !important; }
       .text-grid textarea + .print-text,
       .watermark-box + .print-text,
       .text-grid .print-text {
-        min-height: 15px !important;
-        padding: 1px 2px !important;
-        font-size: 7.25px !important;
-        line-height: 1.06 !important;
+        min-height: 14px !important;
+        padding: 0.8px 1.8px !important;
+        font-size: 7.55px !important;
+        line-height: 1.04 !important;
       }
-      #observacoes + .print-text { min-height: 13px !important; }
+      #observacoes + .print-text { min-height: 12px !important; }
       .watermark { display: none !important; }
-      .signature-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5px !important; }
-      canvas { height: 34px !important; }
-      .print-signature { height: 34px !important; }
+      .signature-grid { grid-template-columns: 1fr 1fr !important; gap: 1px !important; }
+      canvas { height: 32px !important; }
+      .print-signature { height: 32px !important; }
       .signature-box, .gov-box { border-radius: 2px !important; }
       .gov-box {
-        min-height: 37px !important;
-        font-size: 7.1px !important;
-        line-height: 1.05 !important;
-        padding: 2px !important;
+        min-height: 35px !important;
+        font-size: 7.35px !important;
+        line-height: 1.04 !important;
+        padding: 1.5px !important;
       }
     }
+
+
+    /* AJUSTE EXTRA - FONTE AINDA MAIOR NA IMPRESSÃO, PRESERVANDO 1 PÁGINA */
+    @media print {
+      @page { size: A4 portrait; margin: 1.5mm !important; }
+      html, body {
+        width: 210mm !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+      body { font-size: 9.35px !important; line-height: 1.045 !important; }
+      .page { width: 207mm !important; max-width: 207mm !important; padding: 0 !important; margin: 0 auto !important; }
+      .toolbar, .sig-actions, .hint, button { display: none !important; }
+      .card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.8px !important;
+        margin-bottom: 0.35px !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .report-head { padding: 0.5px !important; break-inside: avoid !important; }
+      .brasao { width: 25px !important; margin: 0 auto 0.1px auto !important; }
+      .brand { font-size: 11px !important; line-height: 0.98 !important; margin: 0 !important; }
+      h1 { font-size: 12.7px !important; line-height: 0.98 !important; margin: 0.2px 0 0.7px 0 !important; }
+      .head-grid {
+        grid-template-columns: .82fr 1fr .72fr .9fr 1.35fr .78fr .6fr !important;
+        gap: 0.7px !important;
+        align-items: end !important;
+      }
+      label { font-size: 7.85px !important; line-height: 0.98 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
+      input, select, textarea { display: none !important; }
+      .print-value, .print-text, .print-select {
+        display: block !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+      }
+      .print-text {
+        min-height: 9px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 1.5px !important;
+        padding: 0.6px 1.4px !important;
+        font-size: 8.45px !important;
+        line-height: 1.02 !important;
+      }
+      .section-title {
+        font-size: 9.65px !important;
+        line-height: 0.98 !important;
+        margin: 0.25px 0 0.45px 0 !important;
+        border-left-width: 1.5px !important;
+        padding-left: 1.5px !important;
+        letter-spacing: 0 !important;
+      }
+      .metrics-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.7px !important;
+        align-items: start !important;
+      }
+      .metric-group {
+        font-size: 8.25px !important;
+        line-height: 0.98 !important;
+        margin: 0 !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .metric-group th,
+      .metric-group td {
+        padding: 0.15px 0.8px !important;
+        line-height: 0.98 !important;
+        vertical-align: middle !important;
+      }
+      .metric-group th { font-size: 7.75px !important; line-height: 0.98 !important; letter-spacing: 0 !important; }
+      .metric-group td.qtd { width: 18px !important; min-width: 18px !important; padding: 0 !important; }
+      .print-value {
+        min-height: 6.5px !important;
+        line-height: 0.98 !important;
+        font-size: 8.25px !important;
+        text-align: center !important;
+        font-weight: 800 !important;
+      }
+      .text-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 0.7px !important;
+      }
+      .text-grid .full { grid-column: 1 / -1 !important; }
+      .text-grid textarea + .print-text,
+      .watermark-box + .print-text,
+      .text-grid .print-text {
+        min-height: 11px !important;
+        padding: 0.55px 1.4px !important;
+        font-size: 8.25px !important;
+        line-height: 1.02 !important;
+      }
+      #observacoes + .print-text { min-height: 9px !important; }
+      .watermark { display: none !important; }
+      .signature-grid { grid-template-columns: 1fr 1fr !important; gap: 0.7px !important; }
+      canvas { height: 24px !important; }
+      .print-signature { height: 24px !important; }
+      .signature-box, .gov-box { border-radius: 1.5px !important; }
+      .gov-box {
+        min-height: 27px !important;
+        font-size: 8px !important;
+        line-height: 1.02 !important;
+        padding: 1px !important;
+      }
+    }
+
+
+
+    /* AJUSTE FINAL - FONTES MAIORES NA IMPRESSÃO DO RELATÓRIO DIÁRIO
+       Objetivo: ocupar aproximadamente até 80% da folha A4, preservando 1 página
+       em preenchimento normal/breve. */
+    @media print {
+      @page { size: A4 portrait; margin: 1.2mm !important; }
+      html, body {
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: 210mm !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+      body { font-size: 10.65px !important; line-height: 1.035 !important; }
+      .page { width: 207.6mm !important; max-width: 207.6mm !important; padding: 0 !important; margin: 0 auto !important; }
+
+      .toolbar, .sig-actions, .hint, button { display: none !important; }
+      .card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.45px !important;
+        margin-bottom: 0.18px !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .report-head { padding: 0.25px !important; break-inside: avoid !important; }
+      .brasao { width: 22px !important; margin: 0 auto 0 auto !important; }
+      .brand { font-size: 12.15px !important; line-height: 0.96 !important; margin: 0 !important; }
+      h1 { font-size: 14.05px !important; line-height: 0.96 !important; margin: 0.1px 0 0.35px 0 !important; }
+
+      .head-grid {
+        grid-template-columns: .82fr 1fr .72fr .9fr 1.35fr .78fr .6fr !important;
+        gap: 0.45px !important;
+        align-items: end !important;
+      }
+      label { font-size: 8.65px !important; line-height: 0.96 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
+      input, select, textarea { display: none !important; }
+      .print-value, .print-text, .print-select {
+        display: block !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+      }
+      .print-text {
+        min-height: 9px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 1.2px !important;
+        padding: 0.35px 1.1px !important;
+        font-size: 9.6px !important;
+        line-height: 1.01 !important;
+      }
+      .section-title {
+        font-size: 10.95px !important;
+        line-height: 0.96 !important;
+        margin: 0.12px 0 0.22px 0 !important;
+        border-left-width: 1.2px !important;
+        padding-left: 1.2px !important;
+        letter-spacing: 0 !important;
+      }
+      .metrics-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.45px !important;
+        align-items: start !important;
+      }
+      .metric-group {
+        font-size: 9.45px !important;
+        line-height: 0.96 !important;
+        margin: 0 !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .metric-group th,
+      .metric-group td {
+        padding: 0.05px 0.65px !important;
+        line-height: 0.96 !important;
+        vertical-align: middle !important;
+      }
+      .metric-group th { font-size: 8.75px !important; line-height: 0.96 !important; letter-spacing: 0 !important; }
+      .metric-group td.qtd { width: 16px !important; min-width: 16px !important; padding: 0 !important; }
+      .print-value {
+        min-height: 6px !important;
+        line-height: 0.96 !important;
+        font-size: 9.45px !important;
+        text-align: center !important;
+        font-weight: 800 !important;
+      }
+      .text-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 0.45px !important;
+      }
+      .text-grid .full { grid-column: 1 / -1 !important; }
+      .text-grid textarea + .print-text,
+      .watermark-box + .print-text,
+      .text-grid .print-text {
+        min-height: 10px !important;
+        padding: 0.35px 1.1px !important;
+        font-size: 9.45px !important;
+        line-height: 1.01 !important;
+      }
+      #observacoes + .print-text { min-height: 8px !important; }
+      .watermark { display: none !important; }
+      .signature-grid { grid-template-columns: 1fr 1fr !important; gap: 0.45px !important; }
+      canvas { height: 20px !important; }
+      .print-signature { height: 20px !important; }
+      .signature-box, .gov-box { border-radius: 1.2px !important; }
+      .gov-box {
+        min-height: 23px !important;
+        font-size: 9px !important;
+        line-height: 1.01 !important;
+        padding: 0.6px !important;
+      }
+    }
+
 </style>
 </head>
 <body>
   <main class="page">
     <div class="toolbar">
-      <button type="button" onclick="prepareAndPrint()">Gerar PDF (iOS/Safari)</button>
+      <button type="button" onclick="prepareAndPrint()">Gerar PDF (1 página)</button>
       <button type="button" class="secondary" onclick="salvarRascunhoGuarnicao()">Salvar rascunho</button>
       <button type="button" class="secondary" onclick="carregarRascunhoGuarnicao()">Carregar rascunho</button>
       <button type="button" class="secondary" onclick="exportarDadosGuarnicao()">Exportar dados</button>
@@ -725,7 +883,6 @@
         <h2 class="section-title">Assinatura do responsável</h2>
         <div class="signature-box">
           <canvas id="assinatura" aria-label="Campo para assinatura"></canvas>
-          <img id="assinaturaPrint" class="print-signature empty" alt="Assinatura do responsável" />
           <div class="sig-actions">
             <button type="button" class="secondary" onclick="limparAssinatura()">Limpar assinatura</button>
           </div>
@@ -924,26 +1081,8 @@
       });
     }
 
-
-    function prepararAssinaturaParaImpressao() {
-      const img = document.getElementById('assinaturaPrint');
-      if (!img || !canvas) return;
-      try {
-        if (!assinaturaVazia) {
-          img.src = canvas.toDataURL('image/png');
-          img.classList.remove('empty');
-        } else {
-          img.removeAttribute('src');
-          img.classList.add('empty');
-        }
-      } catch (e) {
-        img.classList.add('empty');
-      }
-    }
-
     function prepararCamposParaImpressao() {
       recalcularCamposAutomaticos();
-      prepararAssinaturaParaImpressao();
       document.querySelectorAll('.num-wrap').forEach(cell => {
         const input = cell.querySelector('input');
         const span = cell.querySelector('.print-value');
@@ -1116,19 +1255,11 @@
     }
 
     function prepareAndPrint() {
-      if (document.activeElement && typeof document.activeElement.blur === 'function') {
-        document.activeElement.blur();
-      }
+      memorizarResponsavelGuarnicao();
       atualizarDiaSemana();
       ajustarTextareas();
       prepararCamposParaImpressao();
-      document.body.classList.add('preparing-print');
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          window.print();
-          setTimeout(() => document.body.classList.remove('preparing-print'), 800);
-        }, 350);
-      });
+      setTimeout(() => window.print(), 100);
     }
 
     function limparFormulario() {
@@ -1354,7 +1485,6 @@
     canvas.addEventListener('pointercancel', parar);
     window.addEventListener('resize', ajustarCanvas);
     window.addEventListener('beforeprint', prepararCamposParaImpressao);
-    window.addEventListener('afterprint', () => document.body.classList.remove('preparing-print'));
   </script>
 </body>
 </html>
