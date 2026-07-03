@@ -2,8 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Relatório Operacional de Serviço - 1ª CPRv</title>
   <style>
     :root {
@@ -17,12 +16,9 @@
       --accent: #0f4c81;
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
+    html { -webkit-text-size-adjust: 100%; }
 
     body {
       margin: 0;
@@ -203,8 +199,6 @@
     }
 
     input, select, textarea {
-      -webkit-appearance: none;
-      appearance: none;
       width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 5px;
@@ -435,63 +429,6 @@
       .dynamic .print-text { line-height: .98; }
       .print-avoid { break-inside: avoid; }
     }
-
-    /* AJUSTES ESPECÍFICOS PARA iOS/SAFARI
-       Mantém a impressão na largura A4, evita ampliação automática de fonte
-       e força as cores/tabelas a seguirem o mesmo padrão do Chrome. */
-    @media screen and (max-width: 860px) {
-      input, select, textarea { font-size: 16px; }
-    }
-
-    @media print {
-      @page { size: A4 portrait; margin: 5mm; }
-      html, body {
-        width: 210mm !important;
-        min-width: 210mm !important;
-        max-width: 210mm !important;
-        overflow: visible !important;
-        -webkit-text-size-adjust: 100% !important;
-        text-size-adjust: 100% !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .page {
-        width: 200mm !important;
-        min-width: 200mm !important;
-        max-width: 200mm !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        overflow: visible !important;
-      }
-      .doc-head {
-        width: 200mm !important;
-      }
-      table {
-        table-layout: fixed !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        page-break-inside: auto !important;
-      }
-      tr, td, th {
-        page-break-inside: avoid !important;
-      }
-      th, td, .print-text, .print-value {
-        overflow-wrap: anywhere !important;
-        word-break: normal !important;
-        -webkit-hyphens: none !important;
-        hyphens: none !important;
-      }
-      img, .brasao-pmpb {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .stripe td, .stripe th, tr.stripe td,
-      th, td.group, #somatorioTable td.total-cell, #somatorioTable th.total-head {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
-
   
 
     /* AJUSTE FINAL - FONTES MAIORES NO PDF, COMPACTAÇÃO PARA MANTER O CPU EM 2 PÁGINAS */
@@ -585,12 +522,57 @@
       .print-avoid { break-inside: avoid !important; }
       tr, td, th { page-break-inside: avoid !important; }
     }
-</style>
+
+
+    /* Melhorias operacionais: guarnição não ativada, navegação vertical e impressão */
+    .unit-title-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .unit-title-actions .unit-toggle {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      font-size: 10px;
+      border-radius: 6px;
+      text-transform: none;
+    }
+    .desativado-msg {
+      display: none;
+      padding: 8px;
+      border-top: 1px solid #334155;
+      background: #f8fafc;
+      font-weight: 900;
+      text-align: center;
+    }
+    .unit-box.unit-disabled .desativado-msg { display: block; }
+    .unit-box.unit-disabled .unit-body { display: none; }
+
+    @media print {
+      .unit-toggle { display: none !important; }
+      .unit-box.unit-disabled .desativado-msg {
+        display: block !important;
+        font-size: 8.6px !important;
+        line-height: 1.15 !important;
+        padding: 4px !important;
+      }
+      .unit-box.unit-disabled .unit-body { display: none !important; }
+      .substituto-print {
+        display: inline-block !important;
+        min-width: 250px !important;
+        text-align: center !important;
+        font-weight: 900 !important;
+        text-decoration: none !important;
+      }
+    }
+
+  </style>
 </head>
 <body>
   <main class="page">
     <div class="toolbar">
-      <button type="button" onclick="prepareAndPrint()">Gerar PDF (iOS/Safari)</button>
+      <button type="button" onclick="prepareAndPrint()">Gerar PDF</button>
       <button type="button" class="secondary" onclick="salvarRascunho()">Salvar rascunho</button>
       <button type="button" class="secondary" onclick="carregarRascunho()">Carregar rascunho</button>
       <button type="button" class="secondary" onclick="document.getElementById('importarGuarnicoesJson').click()">Importar JSON</button>
@@ -729,7 +711,7 @@
 
     <section class="card print-avoid">
       <h2 class="sec">6. Observações:</h2>
-      <textarea id="observacoesGerais" class="field" data-default="Sem alterações dignas de nota." placeholder="Sem alterações dignas de nota."></textarea>
+      <textarea id="observacoesGerais" class="field" data-default="Sem observações dignas de nota." placeholder="Sem observações dignas de nota."></textarea>
       <span class="print-text print-box" data-print-for="observacoesGerais"></span>
     </section>
 
@@ -744,6 +726,11 @@
           <tr>
             <td><input class="field" type="number" min="0" inputmode="numeric" placeholder="01" /><span class="print-text center"></span></td>
             <td><input class="field" type="text" value="Ordem de Serviço do dia" /><span class="print-text"></span></td>
+            <td class="acoes center"><button class="small danger" type="button" onclick="removeRow(this, true)">x</button></td>
+          </tr>
+          <tr>
+            <td><input class="field" type="number" min="0" inputmode="numeric" placeholder="00" /><span class="print-text center"></span></td>
+            <td><input class="field" type="text" value="Relatório de Serviço Diário das Guarnições" /><span class="print-text"></span></td>
             <td class="acoes center"><button class="small danger" type="button" onclick="removeRow(this, true)">x</button></td>
           </tr>
           <tr>
@@ -776,7 +763,7 @@
         Passo o serviço para o meu substituto legal, o
         <span class="passagem-inline">
           <input id="substitutoLegal" class="field" type="text" placeholder="Ex.: 2º TEN QORR SICRANO" />
-          <span class="print-text inline" data-print-for="substitutoLegal"></span>
+          <span class="print-text inline substituto-print" data-print-for="substitutoLegal"></span>
         </span>, com todas as ordens em vigor.
       </div>
       <div class="date-line">
@@ -847,7 +834,7 @@
       ['SINISTROS (SEM EMBRIAGUEZ)', ['C/ VÍTIMAS (TODOS)', 'S/ VÍTIMAS (S/ CNH)', 'S/ VÍTIMAS (MENORES)', 'S/ VÍTIMAS (VTR PMPB)', 'ATROPELAMENTOS', 'OUTROS'], false],
       ['SINISTROS POR EMBRIAGUEZ', ['C/ VÍTIMAS', 'S/ VÍTIMAS', 'ATROPELAMENTOS', 'OUTROS'], true],
       ['ACIONAMENTOS', ['BST’s', 'REBOQUE para outras unidade', 'VTRs de BST em apoio a outras unidades (ou órgãos)'], false],
-      ['NOTIFICAÇÕES', ['ART. 165', 'ART. 165-A', 'ART. 230 XI', 'OUTROS AIT’s (EXCETO 165/165A/230 XI)', 'TOTAL'], true],
+      ['NOTIFICAÇÕES', ['ART. 165', 'ART. 165-A', 'ART. 230 XI', 'DEMAIS AITs COM ABORDAGEM', 'AITs SEM ABORDAGEM', 'TOTAL DE AITs LAVRADOS'], true],
       ['', ['CNH’s RECOLHIDAS'], false],
       ['', ['QUANTIDADE DE TESTE DE ETILÔMETRO REALIZADOS'], true],
       ['APREENSÕES', ['ARMAS', 'DROGAS', 'MENORES', 'SIVA-R', 'SINAIS'], false],
@@ -862,6 +849,54 @@
       { id: 'base02', titulo: 'Base 02' },
       { id: 'tatico', titulo: 'Tático Rodoviário' }
     ];
+
+
+
+    /* Máscara automática para campos de hora/horário no padrão HH:MM */
+    function formatarHorarioValor(valor, finalizar = false) {
+      let nums = String(valor || '').replace(/\D/g, '').slice(0, 4);
+      if (!nums) return '';
+      if (!finalizar) {
+        if (nums.length <= 2) return nums;
+        return `${nums.slice(0, 2)}:${nums.slice(2)}`;
+      }
+      if (nums.length === 1) nums = `0${nums}00`;
+      else if (nums.length === 2) nums = `${nums}00`;
+      else if (nums.length === 3) nums = `${nums.slice(0, 2)}0${nums.slice(2)}`;
+      const h = Math.min(parseInt(nums.slice(0, 2), 10) || 0, 23);
+      const m = Math.min(parseInt(nums.slice(2, 4), 10) || 0, 59);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function campoPareceHorario(el) {
+      if (!el || el.tagName !== 'INPUT') return false;
+      if (['date', 'number', 'hidden', 'file', 'checkbox', 'radio'].includes(el.type)) return false;
+      const textos = [el.id, el.name, el.placeholder, el.getAttribute('aria-label')].filter(Boolean).join(' ');
+      if (/(^|\b)(hora|horario|horário|horas|hh:mm)(\b|$)/i.test(textos)) return true;
+      const label = el.closest('div')?.querySelector('label');
+      if (label && /(^|\b)(hora|horario|horário|horas)(\b|$)/i.test(label.textContent || '')) return true;
+      const td = el.closest('td');
+      const tr = el.closest('tr');
+      const table = el.closest('table');
+      if (td && tr && table) {
+        const idx = Array.from(tr.children).indexOf(td);
+        const th = table.querySelector(`thead tr th:nth-child(${idx + 1})`);
+        if (th && /(^|\b)(hora|horario|horário|horas)(\b|$)/i.test(th.textContent || '')) return true;
+      }
+      return false;
+    }
+
+    function aplicarMascaraHorario(root = document) {
+      root.querySelectorAll('input').forEach(el => {
+        if (!campoPareceHorario(el) || el.dataset.horarioMask === '1') return;
+        el.dataset.horarioMask = '1';
+        el.inputMode = 'numeric';
+        el.maxLength = 5;
+        if (!el.placeholder) el.placeholder = 'hh:mm';
+        el.addEventListener('input', () => { el.value = formatarHorarioValor(el.value, false); });
+        el.addEventListener('blur', () => { el.value = formatarHorarioValor(el.value, true); });
+      });
+    }
 
     function optHTML(arr) {
       return '<option value="">Selecionar</option>' + arr.map(v => `<option>${v}</option>`).join('');
@@ -955,7 +990,11 @@
           }
           tr.innerHTML += `<td class="item">${item}</td>`;
           colunas.forEach(coluna => {
-            tr.innerHTML += `<td class="center num">${numericInput(`data-coluna="${coluna}" data-grupo="${grupoKey}" data-item="${itemKey}"`)}</td>`;
+            let attrs = `data-coluna="${coluna}" data-grupo="${grupoKey}" data-item="${itemKey}"`;
+            if (grupoKey === 'notificacoes' && itemKey === 'total-de-aits-lavrados') {
+              attrs += ' readonly data-ait-total="1" title="Total calculado automaticamente"';
+            }
+            tr.innerHTML += `<td class="center num">${numericInput(attrs)}</td>`;
           });
           tr.innerHTML += '<td class="center total-cell"><span class="print-value total-print">0</span><input class="field total-input" type="text" value="0" readonly /></td>';
           body.appendChild(tr);
@@ -968,9 +1007,14 @@
       unidades.forEach(u => {
         const box = document.createElement('div');
         box.className = 'unit-box';
+        box.dataset.unidadeBox = u.id;
+        const podeDesativar = ['base01', 'base02', 'tatico'].includes(u.id);
+        const tituloUnidadeHTML = podeDesativar
+          ? `<div class="unit-title unit-title-actions"><span>${u.titulo}</span><button class="small secondary no-print unit-toggle" type="button" onclick="toggleGuarnicaoDesativada(this, '${u.id}')">Marcar “não houve”</button></div><input class="field guarnicao-status" type="hidden" value="ativa" data-unidade="${u.id}" data-tipo="status"><div class="desativado-msg print-box"></div>`
+          : `<div class="unit-title">${u.titulo}</div>`;
         if (u.guarda) {
           box.innerHTML = `
-            <div class="unit-title">${u.titulo}</div>
+            ${tituloUnidadeHTML}
             <div class="unit-body">
               <div class="unit-grid guard">
                 <div>
@@ -986,7 +1030,7 @@
         } else {
           const tbodyId = `ocorrencias_${u.id}`;
           box.innerHTML = `
-            <div class="unit-title">${u.titulo}</div>
+            ${tituloUnidadeHTML}
             <div class="unit-body">
               <div class="unit-grid">
                 <div>
@@ -1038,7 +1082,9 @@
       tbody.appendChild(clone);
       popularPatentes(clone);
       aplicarMascaraMatricula(clone);
+      aplicarMascaraHorario(clone);
       attachAutosize(clone);
+      configurarAutopreenchimentoCPU(clone);
       if (renumerar || tbodyId === 'faltasBody') renumerarOrdens(tbody);
     }
 
@@ -1110,7 +1156,101 @@
       });
     }
 
+
+
+    function calcularTotaisAitsCampo9() {
+      const colunas = ['base01', 'base02', 'cpu', 'tatico'];
+      const itensBase = [
+        'art-165',
+        'art-165-a',
+        'art-230-xi',
+        'demais-aits-com-abordagem',
+        'aits-sem-abordagem'
+      ];
+      colunas.forEach(coluna => {
+        let total = 0;
+        itensBase.forEach(item => {
+          const el = document.querySelector(`#somatorioBody input.soma-campo[data-coluna="${coluna}"][data-grupo="notificacoes"][data-item="${item}"]`);
+          total += valorNumericoImportado(el ? el.value : '');
+        });
+        const alvo = document.querySelector(`#somatorioBody input.soma-campo[data-coluna="${coluna}"][data-grupo="notificacoes"][data-item="total-de-aits-lavrados"]`);
+        if (alvo) alvo.value = String(total);
+      });
+    }
+
+    function configurarTabVerticalCampo9() {
+      const colunas = ['base01', 'base02', 'cpu', 'tatico'];
+      document.querySelectorAll('#somatorioBody input.soma-campo').forEach(inp => {
+        if (inp.dataset.tabVertical === '1') return;
+        inp.dataset.tabVertical = '1';
+        inp.addEventListener('keydown', ev => {
+          if (ev.key !== 'Tab') return;
+          ev.preventDefault();
+          const colunaAtual = inp.dataset.coluna;
+          const indiceColuna = colunas.indexOf(colunaAtual);
+          if (indiceColuna < 0) return;
+          const listaAtual = Array.from(document.querySelectorAll(`#somatorioBody input.soma-campo[data-coluna="${colunaAtual}"]:not([readonly])`));
+          let indiceAtual = listaAtual.indexOf(inp);
+          if (indiceAtual < 0) return;
+
+          let destino = null;
+          if (ev.shiftKey) {
+            destino = listaAtual[indiceAtual - 1];
+            if (!destino && indiceColuna > 0) {
+              const listaAnterior = Array.from(document.querySelectorAll(`#somatorioBody input.soma-campo[data-coluna="${colunas[indiceColuna - 1]}"]:not([readonly])`));
+              destino = listaAnterior[listaAnterior.length - 1];
+            }
+          } else {
+            destino = listaAtual[indiceAtual + 1];
+            if (!destino && indiceColuna < colunas.length - 1) {
+              destino = document.querySelector(`#somatorioBody input.soma-campo[data-coluna="${colunas[indiceColuna + 1]}"]:not([readonly])`);
+            }
+          }
+          if (destino) {
+            destino.focus();
+            if (typeof destino.select === 'function') destino.select();
+          }
+        });
+      });
+    }
+
+    function tituloUnidadePorId(unidade) {
+      const obj = unidades.find(u => u.id === unidade);
+      return obj ? obj.titulo : unidade;
+    }
+
+    function textoGuarnicaoDesativada(unidade) {
+      return `${tituloUnidadePorId(unidade)}: não ativado no serviço vigente.`;
+    }
+
+    function aplicarStatusGuarnicao(unidade, desativada) {
+      const box = document.querySelector(`.unit-box[data-unidade-box="${unidade}"]`);
+      if (!box) return;
+      const status = box.querySelector('.guarnicao-status');
+      const msg = box.querySelector('.desativado-msg');
+      const btn = box.querySelector('.unit-toggle');
+      if (status) status.value = desativada ? 'desativada' : 'ativa';
+      box.classList.toggle('unit-disabled', !!desativada);
+      if (msg) msg.textContent = desativada ? textoGuarnicaoDesativada(unidade) : '';
+      if (btn) btn.textContent = desativada ? 'Reativar guarnição' : 'Marcar “não houve”';
+    }
+
+    function toggleGuarnicaoDesativada(btn, unidade) {
+      const box = btn.closest('.unit-box');
+      const desativar = !box.classList.contains('unit-disabled');
+      aplicarStatusGuarnicao(unidade, desativar);
+    }
+
+    function aplicarEstadosGuarnicoesDesativadas() {
+      document.querySelectorAll('.unit-box[data-unidade-box]').forEach(box => {
+        const unidade = box.dataset.unidadeBox;
+        const status = box.querySelector('.guarnicao-status');
+        aplicarStatusGuarnicao(unidade, status && status.value === 'desativada');
+      });
+    }
+
     function atualizarSomatorios() {
+      calcularTotaisAitsCampo9();
       document.querySelectorAll('#somatorioBody tr').forEach(tr => {
         let soma = 0;
         tr.querySelectorAll('input.soma-campo').forEach(inp => {
@@ -1173,6 +1313,219 @@
     }
 
 
+
+
+    /* =========================================================
+       MEMÓRIA DE PREENCHIMENTO AUTOMÁTICO - CPU/CPSU
+       Salva apenas dados cadastrais/estáveis dos responsáveis.
+       Não salva Campo 9, ocorrências, P3 ou alterações do serviço.
+    ========================================================= */
+    const MEMORIA_RESPONSAVEIS_CPU_KEY = 'memoria_responsaveis_cpu_1cprv_v1';
+
+    function normalizarNomeMemoria(valor) {
+      return String(valor || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function lerMemoriaResponsaveisCPU() {
+      try {
+        const base = JSON.parse(localStorage.getItem(MEMORIA_RESPONSAVEIS_CPU_KEY) || '{}') || {};
+        base.cpu = base.cpu || {};
+        base.permanente = base.permanente || {};
+        base.assinante = base.assinante || {};
+        return base;
+      } catch (e) {
+        return { cpu: {}, permanente: {}, assinante: {} };
+      }
+    }
+
+    function salvarMemoriaResponsaveisCPU(memoria) {
+      try {
+        localStorage.setItem(MEMORIA_RESPONSAVEIS_CPU_KEY, JSON.stringify(memoria || { cpu: {}, permanente: {}, assinante: {} }));
+      } catch (e) {}
+    }
+
+    function garantirDatalistMemoria(id) {
+      let lista = document.getElementById(id);
+      if (!lista) {
+        lista = document.createElement('datalist');
+        lista.id = id;
+        document.body.appendChild(lista);
+      }
+      return lista;
+    }
+
+    function preencherDatalistMemoria(id, nomes) {
+      const lista = garantirDatalistMemoria(id);
+      lista.innerHTML = (nomes || [])
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b))
+        .map(nome => `<option value="${String(nome).replace(/"/g, '&quot;')}"></option>`)
+        .join('');
+    }
+
+    function atualizarListasMemoriaCPU() {
+      const memoria = lerMemoriaResponsaveisCPU();
+      preencherDatalistMemoria('listaNomesCPU', Object.values(memoria.cpu).map(p => p.nome));
+      preencherDatalistMemoria('listaNomesPermanente', Object.values(memoria.permanente).map(p => p.nome));
+      preencherDatalistMemoria('listaNomesAssinante', Object.values(memoria.assinante).map(p => p.nome));
+    }
+
+    function camposLinhaCPU(tr) {
+      const tds = tr ? tr.children : [];
+      return {
+        grad: tds[0] ? tds[0].querySelector('select') : null,
+        nome: tds[1] ? tds[1].querySelector('input') : null,
+        matricula: tds[2] ? tds[2].querySelector('input') : null,
+        turno: tds[3] ? tds[3].querySelector('select') : null
+      };
+    }
+
+    function camposLinhaPermanente(tr) {
+      const tds = tr ? tr.children : [];
+      return {
+        grad: tds[0] ? tds[0].querySelector('select') : null,
+        nome: tds[1] ? tds[1].querySelector('input') : null
+      };
+    }
+
+    function memorizarLinhaCPU(tr) {
+      const c = camposLinhaCPU(tr);
+      if (!c.nome) return;
+      const nome = c.nome.value.trim();
+      const chave = normalizarNomeMemoria(nome);
+      if (chave.length < 3) return;
+      const memoria = lerMemoriaResponsaveisCPU();
+      memoria.cpu[chave] = {
+        nome,
+        grad: c.grad ? c.grad.value : '',
+        matricula: c.matricula ? c.matricula.value : '',
+        turno: c.turno ? c.turno.value : '',
+        atualizadoEm: new Date().toISOString()
+      };
+      salvarMemoriaResponsaveisCPU(memoria);
+      atualizarListasMemoriaCPU();
+    }
+
+    function aplicarPerfilLinhaCPU(tr) {
+      const c = camposLinhaCPU(tr);
+      if (!c.nome) return;
+      const perfil = lerMemoriaResponsaveisCPU().cpu[normalizarNomeMemoria(c.nome.value)];
+      if (!perfil) return;
+      if (c.grad && !c.grad.value) c.grad.value = perfil.grad || '';
+      if (c.matricula && !c.matricula.value) c.matricula.value = perfil.matricula || '';
+      if (c.turno && !c.turno.value) c.turno.value = perfil.turno || '';
+      if (c.matricula) c.matricula.value = formatarMatriculaValor(c.matricula.value);
+    }
+
+    function memorizarLinhaPermanente(tr) {
+      const c = camposLinhaPermanente(tr);
+      if (!c.nome) return;
+      const nome = c.nome.value.trim();
+      const chave = normalizarNomeMemoria(nome);
+      if (chave.length < 3) return;
+      const memoria = lerMemoriaResponsaveisCPU();
+      memoria.permanente[chave] = {
+        nome,
+        grad: c.grad ? c.grad.value : '',
+        atualizadoEm: new Date().toISOString()
+      };
+      salvarMemoriaResponsaveisCPU(memoria);
+      atualizarListasMemoriaCPU();
+    }
+
+    function aplicarPerfilLinhaPermanente(tr) {
+      const c = camposLinhaPermanente(tr);
+      if (!c.nome) return;
+      const perfil = lerMemoriaResponsaveisCPU().permanente[normalizarNomeMemoria(c.nome.value)];
+      if (!perfil) return;
+      if (c.grad && !c.grad.value) c.grad.value = perfil.grad || '';
+    }
+
+    function memorizarAssinanteCPU() {
+      const nomeEl = document.getElementById('nomeAssinante');
+      const patenteEl = document.getElementById('patenteAssinante');
+      if (!nomeEl) return;
+      const nome = nomeEl.value.trim();
+      const chave = normalizarNomeMemoria(nome);
+      if (chave.length < 3) return;
+      const memoria = lerMemoriaResponsaveisCPU();
+      memoria.assinante[chave] = {
+        nome,
+        patente: patenteEl ? patenteEl.value : '',
+        atualizadoEm: new Date().toISOString()
+      };
+      salvarMemoriaResponsaveisCPU(memoria);
+      atualizarListasMemoriaCPU();
+    }
+
+    function aplicarPerfilAssinanteCPU() {
+      const nomeEl = document.getElementById('nomeAssinante');
+      const patenteEl = document.getElementById('patenteAssinante');
+      if (!nomeEl || !patenteEl) return;
+      const perfil = lerMemoriaResponsaveisCPU().assinante[normalizarNomeMemoria(nomeEl.value)];
+      if (!perfil) return;
+      if (!patenteEl.value) patenteEl.value = perfil.patente || '';
+    }
+
+    function configurarLinhaMemoriaCPU(tr) {
+      const c = camposLinhaCPU(tr);
+      if (!c.nome || c.nome.dataset.memoriaAuto === '1') return;
+      c.nome.dataset.memoriaAuto = '1';
+      c.nome.setAttribute('list', 'listaNomesCPU');
+      c.nome.addEventListener('change', () => aplicarPerfilLinhaCPU(tr));
+      c.nome.addEventListener('blur', () => { aplicarPerfilLinhaCPU(tr); memorizarLinhaCPU(tr); });
+      [c.grad, c.matricula, c.turno].filter(Boolean).forEach(el => {
+        el.addEventListener('change', () => memorizarLinhaCPU(tr));
+        el.addEventListener('blur', () => memorizarLinhaCPU(tr));
+      });
+    }
+
+    function configurarLinhaMemoriaPermanente(tr) {
+      const c = camposLinhaPermanente(tr);
+      if (!c.nome || c.nome.dataset.memoriaAuto === '1') return;
+      c.nome.dataset.memoriaAuto = '1';
+      c.nome.setAttribute('list', 'listaNomesPermanente');
+      c.nome.addEventListener('change', () => aplicarPerfilLinhaPermanente(tr));
+      c.nome.addEventListener('blur', () => { aplicarPerfilLinhaPermanente(tr); memorizarLinhaPermanente(tr); });
+      if (c.grad) {
+        c.grad.addEventListener('change', () => memorizarLinhaPermanente(tr));
+        c.grad.addEventListener('blur', () => memorizarLinhaPermanente(tr));
+      }
+    }
+
+    function configurarAssinanteMemoriaCPU() {
+      const nomeEl = document.getElementById('nomeAssinante');
+      const patenteEl = document.getElementById('patenteAssinante');
+      if (!nomeEl || nomeEl.dataset.memoriaAuto === '1') return;
+      nomeEl.dataset.memoriaAuto = '1';
+      nomeEl.setAttribute('list', 'listaNomesAssinante');
+      nomeEl.addEventListener('change', aplicarPerfilAssinanteCPU);
+      nomeEl.addEventListener('blur', () => { aplicarPerfilAssinanteCPU(); memorizarAssinanteCPU(); });
+      if (patenteEl) {
+        patenteEl.addEventListener('change', memorizarAssinanteCPU);
+        patenteEl.addEventListener('blur', memorizarAssinanteCPU);
+      }
+    }
+
+    function memorizarTodosResponsaveisCPU() {
+      document.querySelectorAll('#cpuBody tr').forEach(memorizarLinhaCPU);
+      document.querySelectorAll('#permBody tr').forEach(memorizarLinhaPermanente);
+      memorizarAssinanteCPU();
+    }
+
+    function configurarAutopreenchimentoCPU(root = document) {
+      atualizarListasMemoriaCPU();
+      const base = root || document;
+      base.querySelectorAll('#cpuBody tr').forEach(configurarLinhaMemoriaCPU);
+      base.querySelectorAll('#permBody tr').forEach(configurarLinhaMemoriaPermanente);
+      configurarAssinanteMemoriaCPU();
+    }
+
     function valorNumericoImportado(valor) {
       const n = parseInt(String(valor || '').replace(/\D/g, ''), 10);
       return Number.isFinite(n) ? n : 0;
@@ -1216,14 +1569,17 @@
         definirCampo9Importado(coluna, gDestino, iDestino, valor);
       });
 
-      const outrosAits = somarImportados(payload, [
-        ['notificacoes', 'demais-aits-com-abordagem'],
-        ['notificacoes', 'sem-abordagem']
-      ]);
-      if (outrosAits > 0) definirCampo9Importado(coluna, 'notificacoes', 'outros-ait-s-exceto-165-165a-230-xi', outrosAits);
+      const demaisAits = obterValorCampo9Importado(payload, 'notificacoes', 'demais-aits-com-abordagem')
+        || obterValorCampo9Importado(payload, 'notificacoes', 'outros-ait-s-exceto-165-165a-230-xi');
+      definirCampo9Importado(coluna, 'notificacoes', 'demais-aits-com-abordagem', demaisAits);
 
-      const totalAits = obterValorCampo9Importado(payload, 'notificacoes', 'total-de-aits-lavrados');
-      definirCampo9Importado(coluna, 'notificacoes', 'total', totalAits);
+      const aitsSemAbordagem = obterValorCampo9Importado(payload, 'notificacoes', 'aits-sem-abordagem')
+        || obterValorCampo9Importado(payload, 'notificacoes', 'sem-abordagem');
+      definirCampo9Importado(coluna, 'notificacoes', 'aits-sem-abordagem', aitsSemAbordagem);
+
+      const totalAits = obterValorCampo9Importado(payload, 'notificacoes', 'total-de-aits-lavrados')
+        || obterValorCampo9Importado(payload, 'notificacoes', 'total');
+      definirCampo9Importado(coluna, 'notificacoes', 'total-de-aits-lavrados', totalAits);
     }
 
     function importarCampo9Guarnicao(payload, coluna) {
@@ -1245,6 +1601,7 @@
     }
 
     function importarAlteracoesGuarnicao(payload, unidade) {
+      aplicarStatusGuarnicao(unidade, false);
       const alt = payload.alteracoes || {};
       definirAlteracaoGuarnicao(unidade, 'viatura', alt.viatura || '');
       definirAlteracaoGuarnicao(unidade, 'materialCarga', alt.materialCarga || '');
@@ -1380,12 +1737,15 @@
       }
 
       atualizarSomatorios();
+      aplicarEstadosGuarnicoesDesativadas();
+      aplicarMascaraHorario();
       ajustarTextareas();
       prepararCampos();
       alert(`Importação concluída. Arquivos importados: ${importados}. Linhas P3 adicionadas: ${linhasP3}. Ignorados: ${ignorados}.`);
     }
 
     function salvarRascunho() {
+      memorizarTodosResponsaveisCPU();
       try {
         localStorage.setItem('relatorio_operacional_24h_1cprv', JSON.stringify(coletarEstado()));
         alert('Rascunho salvo neste navegador.');
@@ -1400,6 +1760,8 @@
       const data = JSON.parse(raw);
       const campos = Array.from(document.querySelectorAll('input, textarea, select'));
       data.forEach(item => { if (campos[item.i]) campos[item.i].value = item.value; });
+      aplicarEstadosGuarnicoesDesativadas();
+      aplicarMascaraHorario();
       atualizarSomatorios();
       ajustarTextareas();
       alert('Rascunho carregado.');
@@ -1412,6 +1774,8 @@
         else if (el.readOnly) el.value = '0';
         else el.value = '';
       });
+      document.querySelectorAll('.guarnicao-status').forEach(el => { el.value = 'ativa'; });
+      aplicarEstadosGuarnicoesDesativadas();
       document.getElementById('dataInicio').value = hojeISO();
       sugerirDataTermino();
       atualizarSomatorios();
@@ -1419,24 +1783,27 @@
     }
 
     function prepareAndPrint() {
-      document.body.classList.add('preparing-print-ios');
+      memorizarTodosResponsaveisCPU();
       sugerirDataTermino();
       ajustarTextareas();
       prepararCampos();
-      setTimeout(() => window.print(), 180);
+      setTimeout(() => window.print(), 120);
     }
 
     renderP3();
     renderSomatorio();
     renderAlteracoes();
+    aplicarEstadosGuarnicoesDesativadas();
     popularPatentes();
     aplicarMascaraMatricula();
+    aplicarMascaraHorario();
     attachAutosize();
+    configurarAutopreenchimentoCPU();
     document.getElementById('dataInicio').value = hojeISO();
     sugerirDataTermino();
     document.querySelectorAll('#somatorioBody input.soma-campo').forEach(inp => inp.addEventListener('input', atualizarSomatorios));
-    window.addEventListener('beforeprint', () => { document.body.classList.add('preparing-print-ios'); prepararCampos(); });
-    window.addEventListener('afterprint', () => document.body.classList.remove('preparing-print-ios'));
+    configurarTabVerticalCampo9();
+    window.addEventListener('beforeprint', prepararCampos);
   </script>
 </body>
 </html>
