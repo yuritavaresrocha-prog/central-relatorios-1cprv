@@ -434,7 +434,117 @@
       }
     }
 
-  </style>
+  
+
+    /* AJUSTE FINAL - FONTES MAIORES NO PDF, MANTENDO O SERVIÇO DIÁRIO EM 1 PÁGINA */
+    @media print {
+      @page { size: A4 portrait; margin: 3mm !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      html, body {
+        width: 210mm !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+      body { font-size: 8.25px !important; line-height: 1.08 !important; }
+      .page { width: 204mm !important; max-width: 204mm !important; padding: 0 !important; margin: 0 auto !important; }
+      .toolbar, .sig-actions, .hint, button { display: none !important; }
+      .card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 1.6px !important;
+        margin-bottom: 1px !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .report-head { padding: 1.5px !important; break-inside: avoid !important; }
+      .brasao { width: 31px !important; margin: 0 auto 0.5px auto !important; }
+      .brand { font-size: 9.8px !important; line-height: 1 !important; margin: 0 !important; }
+      h1 { font-size: 11.25px !important; line-height: 1 !important; margin: 1px 0 1.5px 0 !important; }
+      .head-grid {
+        grid-template-columns: .82fr 1fr .72fr .9fr 1.35fr .78fr .6fr !important;
+        gap: 1.2px !important;
+        align-items: end !important;
+      }
+      label { font-size: 7px !important; line-height: 1 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
+      input, select, textarea { display: none !important; }
+      .print-value, .print-text, .print-select {
+        display: block !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+      }
+      .print-text {
+        min-height: 10px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 2px !important;
+        padding: 1px 2px !important;
+        font-size: 7.35px !important;
+        line-height: 1.06 !important;
+      }
+      .section-title {
+        font-size: 8.45px !important;
+        line-height: 1 !important;
+        margin: 0.8px 0 1px 0 !important;
+        border-left-width: 2px !important;
+        padding-left: 2px !important;
+        letter-spacing: 0 !important;
+      }
+      .metrics-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1.2px !important;
+        align-items: start !important;
+      }
+      .metric-group {
+        font-size: 7.15px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .metric-group th,
+      .metric-group td {
+        padding: 0.35px 1px !important;
+        line-height: 1 !important;
+        vertical-align: middle !important;
+      }
+      .metric-group th { font-size: 6.75px !important; line-height: 1 !important; letter-spacing: 0 !important; }
+      .metric-group td.qtd { width: 20px !important; min-width: 20px !important; padding: 0 !important; }
+      .print-value {
+        min-height: 7px !important;
+        line-height: 1 !important;
+        font-size: 7.25px !important;
+        text-align: center !important;
+        font-weight: 800 !important;
+      }
+      .text-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 1.2px !important;
+      }
+      .text-grid .full { grid-column: 1 / -1 !important; }
+      .text-grid textarea + .print-text,
+      .watermark-box + .print-text,
+      .text-grid .print-text {
+        min-height: 15px !important;
+        padding: 1px 2px !important;
+        font-size: 7.25px !important;
+        line-height: 1.06 !important;
+      }
+      #observacoes + .print-text { min-height: 13px !important; }
+      .watermark { display: none !important; }
+      .signature-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5px !important; }
+      canvas { height: 34px !important; }
+      .print-signature { height: 34px !important; }
+      .signature-box, .gov-box { border-radius: 2px !important; }
+      .gov-box {
+        min-height: 37px !important;
+        font-size: 7.1px !important;
+        line-height: 1.05 !important;
+        padding: 2px !important;
+      }
+    }
+</style>
 </head>
 <body>
   <main class="page">
@@ -758,11 +868,15 @@
     }
 
     function coletarDadosGuarnicaoParaExportacao() {
+      const dataRelatorio = obterValorCampo('data') || dataLocalArquivo();
+      const dataTitulo = formatarDataTituloJson(dataRelatorio);
       return {
         schema: 'bptrans-1cprv-guarnicao-v1',
         tipo: 'relatorio_servico_diario_guarnicao',
         geradoEm: new Date().toISOString(),
-        data: obterValorCampo('data'),
+        titulo: `Relatório de Serviço Diário - ${dataTitulo}`,
+        tituloData: dataTitulo,
+        data: dataRelatorio,
         diaSemana: obterValorCampo('diaSemana'),
         guarnicao: obterValorCampo('guarnicao'),
         guarnicaoComplemento: obterValorCampo('guarnicaoComplemento'),
@@ -779,10 +893,19 @@
       };
     }
 
+    function formatarDataTituloJson(dataISO) {
+      const valor = String(dataISO || '').trim();
+      const iso = valor.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (iso) return `${iso[3]}.${iso[2]}.${iso[1].slice(-2)}`;
+      const br = valor.match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
+      if (br) return `${br[1]}.${br[2]}.${br[3].slice(-2)}`;
+      return formatarDataTituloJson(dataLocalArquivo());
+    }
+
     function nomeArquivoDadosGuarnicao(payload) {
-      const data = payload.data || dataLocalArquivo();
+      const dataTitulo = formatarDataTituloJson(payload.data || dataLocalArquivo());
       const destino = payload.destinoCampo9 || normalizarChave(payload.guarnicao || 'guarnicao') || 'guarnicao';
-      return `${destino}_${data}_dados.json`;
+      return `${destino}_${dataTitulo}_dados.json`;
     }
 
     function dataLocalArquivo() {
