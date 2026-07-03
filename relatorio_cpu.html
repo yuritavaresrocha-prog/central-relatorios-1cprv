@@ -429,7 +429,100 @@
       .dynamic .print-text { line-height: .98; }
       .print-avoid { break-inside: avoid; }
     }
-  </style>
+  
+
+    /* AJUSTE FINAL - FONTES MAIORES NO PDF, COMPACTAÇÃO PARA MANTER O CPU EM 2 PÁGINAS */
+    @media print {
+      @page { size: A4 portrait; margin: 4mm !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      html, body {
+        width: 210mm !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+      }
+      body { font-size: 8.55px !important; line-height: 1.06 !important; }
+      .page {
+        width: 202mm !important;
+        min-width: 202mm !important;
+        max-width: 202mm !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+      }
+      .toolbar, .no-print, .acoes, button { display: none !important; }
+      .card {
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 2px 0 !important;
+        margin-bottom: 3px !important;
+      }
+      .doc-head {
+        width: 202mm !important;
+        padding: 1px 122px 2px 122px !important;
+        break-inside: avoid !important;
+      }
+      .visto {
+        right: 0 !important;
+        top: 0 !important;
+        width: 116px !important;
+        padding: 2px 3px !important;
+        font-size: 8.3px !important;
+        line-height: 1.05 !important;
+      }
+      .brasao-pmpb { width: 36px !important; margin-bottom: 0.5px !important; }
+      .pm-title { font-size: 9.8px !important; line-height: 1.03 !important; letter-spacing: 0 !important; }
+      h1 { font-size: 12px !important; line-height: 1.02 !important; margin: 2px 0 1.5px !important; }
+      .periodo { gap: 3px !important; font-size: 8.5px !important; margin-top: 1px !important; }
+      h2.sec { font-size: 9.45px !important; line-height: 1.02 !important; margin-bottom: 1px !important; }
+      .secbar { margin-bottom: 1px !important; }
+      table { margin-bottom: 1.6px !important; table-layout: fixed !important; width: 100% !important; }
+      th, td {
+        padding: 0.45px 1px !important;
+        border-color: #111827 !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+      }
+      th { font-size: 7.25px !important; line-height: 1 !important; }
+      td { font-size: 7.65px !important; line-height: 1.02 !important; }
+      td.group, td.item { font-size: 7.45px !important; line-height: 1 !important; }
+      .compact th, .compact td { padding: 0.35px 0.8px !important; }
+      input, select, textarea { display: none !important; }
+      .print-value, .print-text {
+        display: block !important;
+        white-space: pre-wrap !important;
+        overflow-wrap: anywhere !important;
+        min-height: 8.5px !important;
+        font-size: inherit !important;
+        line-height: inherit !important;
+      }
+      .print-value { text-align: center !important; font-weight: 800 !important; }
+      .print-text.inline { display: inline !important; }
+      .hint, .w-acoes, .acoes { display: none !important; }
+      .duas-colunas { grid-template-columns: 1fr 1fr !important; gap: 2.5px !important; }
+      .unit-box { border-radius: 0 !important; break-inside: avoid !important; }
+      .unit-title { padding: 1.5px 3px !important; font-size: 9.3px !important; line-height: 1.03 !important; }
+      .unit-body { padding: 2px !important; }
+      .unit-grid { grid-template-columns: 1fr 1fr 1.2fr !important; gap: 2px !important; }
+      .unit-grid.guard { grid-template-columns: 1fr 1fr !important; }
+      label { font-size: 7.05px !important; line-height: 1 !important; margin-bottom: 0 !important; letter-spacing: 0 !important; }
+      .print-box { border: 1px solid #cbd5e1 !important; padding: 1px 2px !important; min-height: 11px !important; }
+      .nota { font-size: 6.45px !important; line-height: 1 !important; margin: -1px 0 1px !important; }
+      .passagem-texto { font-size: 8.45px !important; line-height: 1.14 !important; border-radius: 0 !important; padding: 3px !important; }
+      .date-line { margin-top: 2px !important; font-size: 8.45px !important; }
+      .assinatura-final { padding: 8px 8px 1px !important; font-size: 8.45px !important; }
+      #somatorioTable col.col-grupo { width: 18% !important; }
+      #somatorioTable col.col-item { width: 34% !important; }
+      #somatorioTable col.col-base { width: 8% !important; }
+      #somatorioTable col.col-cpu { width: 8% !important; }
+      #somatorioTable col.col-tor { width: 8% !important; }
+      #somatorioTable col.col-total { width: 16% !important; }
+      #somatorioTable td.total-cell, #somatorioTable th.total-head { font-weight: 900 !important; background: #eef2f7 !important; }
+      .dynamic .print-text { line-height: 1 !important; }
+      .print-avoid { break-inside: avoid !important; }
+      tr, td, th { page-break-inside: avoid !important; }
+    }
+</style>
 </head>
 <body>
   <main class="page">
@@ -437,7 +530,7 @@
       <button type="button" onclick="prepareAndPrint()">Gerar PDF</button>
       <button type="button" class="secondary" onclick="salvarRascunho()">Salvar rascunho</button>
       <button type="button" class="secondary" onclick="carregarRascunho()">Carregar rascunho</button>
-      <button type="button" class="secondary" onclick="document.getElementById('importarGuarnicoesJson').click()">Importar guarnições</button>
+      <button type="button" class="secondary" onclick="document.getElementById('importarGuarnicoesJson').click()">Importar JSON</button>
       <input id="importarGuarnicoesJson" class="no-print" type="file" accept=".json,application/json" multiple style="display:none" onchange="importarDadosGuarnicoes(this.files); this.value='';" />
       <button type="button" class="danger" onclick="limparFormulario()">Limpar</button>
     </div>
@@ -1103,37 +1196,130 @@
       return '';
     }
 
+
+
+    function normalizarCampoP3Importado(valor) {
+      const txt = String(valor || '').toLowerCase().trim();
+      const apenasNum = txt.match(/\d+/);
+      if (txt.startsWith('p3c')) return txt.replace(/[^a-z0-9]/g, '');
+      if (apenasNum) return `p3c${apenasNum[0]}`;
+      const mapa = {
+        armas: 'p3c1', arma: 'p3c1',
+        drogas: 'p3c2', droga: 'p3c2',
+        operacoes: 'p3c3', operacao: 'p3c3', blitz: 'p3c3', checkpoint: 'p3c3', 'check-point': 'p3c3',
+        veiculos: 'p3c4', veiculo: 'p3c4', recuperado: 'p3c4', recuperados: 'p3c4',
+        mandados: 'p3c5', mandado: 'p3c5',
+        prisoes: 'p3c6', prisao: 'p3c6',
+        tco: 'p3c8', termo: 'p3c8'
+      };
+      return mapa[txt] || '';
+    }
+
+    const camposP3Importaveis = {
+      p3c1: ['tipo', 'marca', 'modelo', 'calibre', 'quantidadeMunicoes', 'guarnicao'],
+      p3c2: ['tipo', 'quantidade', 'guarnicao'],
+      p3c3: ['nome', 'local', 'turno', 'apreensoesVeiculos', 'aits', 'prisoes'],
+      p3c4: ['placa', 'uf', 'tipo', 'marca', 'situacao', 'local', 'hora'],
+      p3c5: ['hora', 'fichaCicc', 'local'],
+      p3c6: ['hora', 'fichaCicc', 'situacao', 'local'],
+      p3c8: ['numero', 'numeroTco', 'tipificacao', 'guarnicao']
+    };
+
+    function linhaP3ParaArray(campoId, linha) {
+      if (Array.isArray(linha)) return linha.map(v => String(v ?? ''));
+      const chaves = camposP3Importaveis[campoId] || [];
+      return chaves.map(chave => String(linha && linha[chave] !== undefined ? linha[chave] : ''));
+    }
+
+    function linhaEstaVazia(tr) {
+      return Array.from(tr.querySelectorAll('input.field, textarea.field, select.field')).every(el => !String(el.value || '').trim());
+    }
+
+    function preencherLinhaP3(campoId, valores) {
+      const tbodyId = `${campoId}Body`;
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return false;
+
+      let alvo = Array.from(tbody.querySelectorAll('tr')).find(linhaEstaVazia);
+      if (!alvo) {
+        addRow(tbodyId);
+        alvo = tbody.querySelector('tr:last-child');
+      }
+      if (!alvo) return false;
+
+      const campos = alvo.querySelectorAll('input.field, textarea.field, select.field');
+      valores.forEach((valor, i) => {
+        if (campos[i]) campos[i].value = String(valor ?? '');
+      });
+      return true;
+    }
+
+    function importarCampoP3(payload) {
+      const campoId = normalizarCampoP3Importado(payload.campo || payload.destino || payload.campoP3 || payload.id);
+      if (!campoId || !camposP3Importaveis[campoId]) return 0;
+
+      let linhas = [];
+      if (Array.isArray(payload.linhas)) linhas = payload.linhas;
+      else if (payload.dados) linhas = [payload.dados];
+      else if (payload.linha) linhas = [payload.linha];
+      else return 0;
+
+      let qtd = 0;
+      linhas.forEach(linha => {
+        const valores = linhaP3ParaArray(campoId, linha);
+        if (preencherLinhaP3(campoId, valores)) qtd++;
+      });
+      return qtd;
+    }
+
     async function importarDadosGuarnicoes(files) {
       if (!files || !files.length) return;
       let importados = 0;
       let ignorados = 0;
+      let linhasP3 = 0;
 
       for (const file of Array.from(files)) {
         try {
           const texto = await file.text();
           const payload = JSON.parse(texto);
-          if (!payload || payload.schema !== 'bptrans-1cprv-guarnicao-v1') {
+          if (!payload || !payload.schema) {
             ignorados++;
             continue;
           }
 
-          const unidade = unidadeDestinoImportacao(payload);
-          if (!unidade) {
-            ignorados++;
+          if (payload.schema === 'bptrans-1cprv-guarnicao-v1') {
+            const unidade = unidadeDestinoImportacao(payload);
+            if (!unidade) {
+              ignorados++;
+              continue;
+            }
+            importarCampo9Guarnicao(payload, unidade);
+            importarAlteracoesGuarnicao(payload, unidade);
+            importados++;
             continue;
           }
 
-          importarCampo9Guarnicao(payload, unidade);
-          importarAlteracoesGuarnicao(payload, unidade);
-          importados++;
+          if (payload.schema === 'bptrans-1cprv-p3-v1') {
+            const qtd = importarCampoP3(payload);
+            if (qtd > 0) {
+              linhasP3 += qtd;
+              importados++;
+            } else {
+              ignorados++;
+            }
+            continue;
+          }
+
+          ignorados++;
         } catch (e) {
           ignorados++;
         }
       }
 
+      atualizarSomatorios();
       ajustarTextareas();
       prepararCampos();
-      alert(`Importação concluída. Relatórios importados: ${importados}. Ignorados: ${ignorados}.`);
+      alert(`Importação concluída. Arquivos importados: ${importados}. Linhas P3 adicionadas: ${linhasP3}. Ignorados: ${ignorados}.`);
     }
 
     function salvarRascunho() {
