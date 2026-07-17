@@ -25,6 +25,9 @@
     button.danger{background:var(--danger);}
     button.success{background:var(--success);}
     button.small{font-size:10px;min-height:24px;padding:4px 7px;border-radius:6px;}
+    .repeat-tools{padding:3px 4px;background:#f8fafc;border-bottom:1px solid #000;font-size:8.5pt;}
+    .repeat-tools label{display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-weight:800;}
+    .repeat-tools select{width:auto;min-width:260px;font-size:9pt;}
     .sheet{background:#fff;border:1px solid #cbd5e1;box-shadow:0 4px 18px rgba(15,23,42,.08);padding:9px;}
     .print-area{background:#fff;}
     table.form{width:100%;border-collapse:collapse;table-layout:fixed;margin:0;}
@@ -385,7 +388,8 @@
   <template id="tplTestemunhaPM">
     <div class="subcard testemunha-card testemunha-pm-card">
       <div class="subcard-head"><span>Testemunha - Policial Militar</span><button type="button" class="small danger no-print" onclick="removeCard(this)">Remover</button></div>
-      <table class="form"><colgroup><col style="width:48%"><col style="width:22%"><col style="width:30%"></colgroup><tr><td><label class="lbl">Nome/Grad./Matr.</label><input></td><td><label class="lbl">Profissão</label><input value="Policial Militar"></td><td><label class="lbl">UOp/SUOp</label><input value="BPTran/1ªCPRv"></td></tr></table>
+      <div class="repeat-tools no-print"><label>Repetir integrante da guarnição:<select class="testemunha-pm-repetir" onchange="preencherTestemunhaPM(this)"><option value="">Selecionar motorista/patrulheiro...</option></select></label></div>
+      <table class="form"><colgroup><col style="width:48%"><col style="width:22%"><col style="width:30%"></colgroup><tr><td><label class="lbl">Nome/Grad./Matr.</label><input class="testemunha-pm-nome"></td><td><label class="lbl">Profissão</label><input value="Policial Militar"></td><td><label class="lbl">UOp/SUOp</label><input value="BPTran/1ªCPRv"></td></tr></table>
     </div>
   </template>
 
@@ -430,12 +434,39 @@
     function maskCIOP(v){ let d = onlyDigits(v); if(d.startsWith('20')) d=d.slice(2); if(d.startsWith('PM20')) d=d.slice(4); return 'PM20' + d.slice(0,8); }
     function maskAltura(v){ const d = onlyDigits(v).slice(0,3); if(!d)return ''; if(d.length===1)return d+',__ m'.replace('__',''); if(d.length===2)return d[0]+','+d[1]+' m'; return d[0]+','+d.slice(1)+' m'; }
     function autoGrow(el){ el.style.height='auto'; const min = el.classList.contains('textarea-big') ? 145 : el.classList.contains('textarea-mid') ? 58 : 24; el.style.height = Math.max(el.scrollHeight, min) + 'px'; }
+    function coletarIntegrantesGuarnicao(){
+      const itens=[];
+      document.querySelectorAll('.guarnicao-card').forEach((card, idx)=>{
+        const inputs = card.querySelectorAll('input');
+        const guarnicao = idx + 1;
+        const dados = [
+          {papel:'Motorista', valor: inputs[2]?.value?.trim()},
+          {papel:'Patrulheiro 01', valor: inputs[3]?.value?.trim()},
+          {papel:'Patrulheiro 02', valor: inputs[4]?.value?.trim()}
+        ];
+        dados.forEach(d=>{ if(d.valor) itens.push({label:'Guarnição ' + guarnicao + ' - ' + d.papel + ': ' + d.valor, valor:d.valor}); });
+      });
+      return itens;
+    }
+    function atualizarOpcoesTestemunhasPM(){
+      const itens = coletarIntegrantesGuarnicao();
+      document.querySelectorAll('.testemunha-pm-repetir').forEach(sel=>{
+        const atual = sel.value;
+        sel.innerHTML = '<option value="">Selecionar motorista/patrulheiro...</option>' + itens.map(i=>'<option value="'+escapeHtml(i.valor)+'">'+escapeHtml(i.label)+'</option>').join('');
+        if(itens.some(i=>i.valor===atual)) sel.value = atual;
+      });
+    }
+    function preencherTestemunhaPM(sel){
+      const card = sel.closest('.testemunha-pm-card');
+      const input = card?.querySelector('.testemunha-pm-nome');
+      if(input && sel.value){ input.value = sel.value; input.dispatchEvent(new Event('input', {bubbles:true})); }
+    }
     function bind(root=document){
       root.querySelectorAll('[data-mask]').forEach(el=>{ if(el.dataset.boundMask)return; el.dataset.boundMask='1'; el.addEventListener('input',()=>{ const m=el.dataset.mask; if(m==='date') el.value=maskDate(el.value); if(m==='time') el.value=maskTime(el.value); if(m==='cpf') el.value=maskCPF(el.value); if(m==='ciop') el.value=maskCIOP(el.value); if(m==='altura') el.value=maskAltura(el.value); }); });
       root.querySelectorAll('textarea').forEach(el=>{ if(el.dataset.boundGrow)return; el.dataset.boundGrow='1'; el.addEventListener('input',()=>autoGrow(el)); });
-      root.querySelectorAll('input,select,textarea').forEach(el=>{ if(el.dataset.boundUpdate)return; el.dataset.boundUpdate='1'; el.addEventListener('input',()=>{ updateAcusadoOptions(); updateResistenciaText(); }); el.addEventListener('change',()=>{ updateAcusadoOptions(); updateResistenciaText(); }); });
+      root.querySelectorAll('input,select,textarea').forEach(el=>{ if(el.dataset.boundUpdate)return; el.dataset.boundUpdate='1'; el.addEventListener('input',()=>{ updateAcusadoOptions(); updateResistenciaText(); atualizarOpcoesTestemunhasPM(); }); el.addEventListener('change',()=>{ updateAcusadoOptions(); updateResistenciaText(); atualizarOpcoesTestemunhasPM(); }); });
     }
-    function cloneTemplate(tplId, targetId){ const tpl=document.getElementById(tplId); const target=document.getElementById(targetId); target.appendChild(tpl.content.cloneNode(true)); bind(target); refreshCounters(); updateAcusadoOptions(); document.querySelectorAll('textarea').forEach(autoGrow); }
+    function cloneTemplate(tplId, targetId){ const tpl=document.getElementById(tplId); const target=document.getElementById(targetId); target.appendChild(tpl.content.cloneNode(true)); bind(target); refreshCounters(); updateAcusadoOptions(); atualizarOpcoesTestemunhasPM(); document.querySelectorAll('textarea').forEach(autoGrow); }
     function addGuarnicao(){ cloneTemplate('tplGuarnicao','guarnicoes'); }
     function addAcusado(){ document.getElementById('semAcusado').checked=false; toggleEmpty('acusado'); cloneTemplate('tplAcusado','acusados'); }
     function addVitima(){ document.getElementById('semVitima').checked=false; toggleEmpty('vitima'); cloneTemplate('tplVitima','vitimas'); }
@@ -444,7 +475,7 @@
     function addArma(){ document.getElementById('semArma').checked=false; toggleList('semArma','armas','armaEmpty'); cloneTemplate('tplArma','armas'); }
     function addCartucho(){ document.getElementById('semCartucho').checked=false; toggleList('semCartucho','cartuchos','cartuchoEmpty'); cloneTemplate('tplCartucho','cartuchos'); }
     function addVeiculo(){ document.getElementById('semVeiculo').checked=false; toggleList('semVeiculo','veiculos','veiculoEmpty'); cloneTemplate('tplVeiculo','veiculos'); }
-    function removeCard(btn){ const card=btn.closest('.subcard'); if(card) card.remove(); refreshCounters(); updateAcusadoOptions(); }
+    function removeCard(btn){ const card=btn.closest('.subcard'); if(card) card.remove(); refreshCounters(); updateAcusadoOptions(); atualizarOpcoesTestemunhasPM(); }
     function refreshCounters(){
       document.querySelectorAll('.guarnicao-card .subcard-head span').forEach((el,i)=>el.textContent='Guarnição '+(i+1));
       document.querySelectorAll('.acusado-card .subcard-head span').forEach((el,i)=>el.textContent='Acusado '+(i+1));
@@ -509,7 +540,7 @@
     function prepareAndPrint(){ document.querySelectorAll('textarea').forEach(autoGrow); updateAcusadoOptions(); updateResistenciaText(); createPrintRenders(); window.print(); }
     window.addEventListener('beforeprint', createPrintRenders);
     window.addEventListener('afterprint', clearPrintRenders);
-    document.addEventListener('DOMContentLoaded',()=>{ bind(); addGuarnicao(); addAcusado(); addVitima(); addTestemunhaPM(); toggleSolicitante(); toggleList('semArma','armas','armaEmpty'); toggleList('semCartucho','cartuchos','cartuchoEmpty'); toggleList('semVeiculo','veiculos','veiculoEmpty'); toggleObjetos(); toggleResistencia(); });
+    document.addEventListener('DOMContentLoaded',()=>{ bind(); addGuarnicao(); addAcusado(); addVitima(); addTestemunhaPM(); toggleSolicitante(); toggleList('semArma','armas','armaEmpty'); toggleList('semCartucho','cartuchos','cartuchoEmpty'); toggleList('semVeiculo','veiculos','veiculoEmpty'); toggleObjetos(); toggleResistencia(); atualizarOpcoesTestemunhasPM(); });
   </script>
 </body>
 </html>
