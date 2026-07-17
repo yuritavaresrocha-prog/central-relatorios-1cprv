@@ -19,9 +19,7 @@
       --vermelho: #9f1239;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -174,8 +172,7 @@
       padding-top: 12px;
     }
 
-    button,
-    .btn {
+    button, .btn {
       border: 0;
       border-radius: 10px;
       padding: 10px 12px;
@@ -193,29 +190,12 @@
       text-align: center;
     }
 
-    .btn:hover {
-      background: var(--azul-escuro);
-    }
-
-    .btn-ios {
-      background: var(--verde);
-    }
-
-    .btn-ios:hover {
-      background: #0b5f58;
-    }
-
-    .btn-tool {
-      background: #334155;
-    }
-
-    .btn-tool:hover {
-      background: #1f2937;
-    }
-
-    .btn-danger {
-      background: var(--vermelho);
-    }
+    .btn:hover { background: var(--azul-escuro); }
+    .btn-ios { background: var(--verde); }
+    .btn-ios:hover { background: #0b5f58; }
+    .btn-tool { background: #334155; }
+    .btn-tool:hover { background: #1f2937; }
+    .btn-danger { background: var(--vermelho); }
 
     footer {
       margin: 20px 0 6px;
@@ -224,34 +204,15 @@
       font-size: 12px;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     @media (max-width: 780px) {
-      .page {
-        padding: 10px;
-      }
-
-      h1 {
-        font-size: 20px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        min-height: auto;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
+      .page { padding: 10px; }
+      h1 { font-size: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
@@ -267,12 +228,22 @@
 
     <section class="search-card">
       <label for="searchInput">Pesquisar relatório ou ferramenta</label>
-      <input id="searchInput" type="search" placeholder="Ex.: CPU, Serviço Diário, Fisco, Remoção, JSON..." oninput="filtrarCards()" />
+      <input id="searchInput" type="search" placeholder="Ex.: CPU, Serviço Diário, Fisco, Remoção, BO, JSON..." oninput="filtrarCards()" />
     </section>
 
     <div class="section-title">Relatórios principais</div>
 
     <section class="grid">
+      <article class="card item-card" data-search="boletim ocorrência bo ciop copom acusado vítima testemunha arma cartucho objeto veículo relato auto resistência">
+        <h2>Boletim de Ocorrência</h2>
+        <p>Formulário de boletim com Nº CIOP/COPOM, dados da ocorrência, múltiplas guarnições, acusado, vítima, testemunha, apreensões, relato, resistência e recebimento.</p>
+        <span class="tag">BO / Ocorrência</span>
+        <div class="actions">
+          <a class="btn" href="boletim_ocorrencia_bptrans_1cprv.html">Abrir HTML</a>
+          <a class="btn btn-ios" href="boletim_ocorrencia_bptrans_1cprv_ios.html">Abrir iOS</a>
+        </div>
+      </article>
+
       <article class="card item-card" data-search="serviço diario guarnição guarnições base tor relatorio json exportar">
         <h2>Relatório de Serviço Diário</h2>
         <p>Relatório das guarnições, bases e equipes de serviço. Possui rascunho local, geração de PDF e exportação JSON para alimentar o relatório do CPU/CPSU.</p>
@@ -347,10 +318,7 @@
       const cards = document.querySelectorAll('.item-card');
 
       cards.forEach(card => {
-        const texto = (
-          card.innerText + ' ' + (card.getAttribute('data-search') || '')
-        ).toLowerCase();
-
+        const texto = (card.innerText + ' ' + (card.getAttribute('data-search') || '')).toLowerCase();
         card.classList.toggle('hidden', termo && !texto.includes(termo));
       });
     }
