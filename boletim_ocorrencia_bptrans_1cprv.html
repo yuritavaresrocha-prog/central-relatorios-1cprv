@@ -268,22 +268,15 @@
         <table class="form"><tr><td class="section-title">Auto de resistência à prisão</td></tr></table>
         <div class="controls no-print">
           <label class="checks"><input type="checkbox" id="houveResistencia" onchange="toggleResistencia()"> Houve resistência à prisão</label>
-          <label class="checks"><input type="checkbox" id="usarAcusadoResistencia" onchange="usarPrimeiroAcusado()"> Repetir automaticamente acusado</label>
+          <button type="button" class="small success" id="btnAddResistencia" style="display:none" onclick="addResistencia()">+ Acusado/desfecho</button>
+          <button type="button" class="small secondary" id="btnTodosResistencia" style="display:none" onclick="criarResistenciasTodosAcusados()">Criar para todos os acusados</button>
         </div>
         <div id="semResistenciaBox" class="empty-note">Não houve resistência à prisão.</div>
         <div id="resistenciaBox" class="hidden">
-          <table class="form">
-            <colgroup><col style="width:30%"><col style="width:25%"><col style="width:25%"><col style="width:20%"></colgroup>
-            <tr>
-              <td><label class="lbl">Acusado</label><select id="acusadoResistencia" onchange="updateResistenciaText()"><option value="">Selecione...</option></select></td>
-              <td><label class="lbl">Tipo penal / infração</label><input id="tipoPenalResistencia" oninput="updateResistenciaText()"></td>
-              <td><label class="lbl">Meio empregado para conter a resistência</label><input id="meioForca" oninput="updateResistenciaText()"></td>
-              <td><label class="lbl">Resultado</label><input id="resultadoForca" oninput="updateResistenciaText()" placeholder="sem lesão / lesão / óbito"></td>
-            </tr>
-          </table>
-          <div class="resistance-text">
-            No exercício legal da função policial, foi dada voz de prisão ao acusado <strong id="txtAcusadoResistencia">____________________________</strong>, em razão da prática, em tese, do delito/contravenção de <strong id="txtTipoPenal">____________________________</strong>. Diante da resistência apresentada à ação policial e após as advertências cabíveis, foi necessário o emprego proporcional, moderado e progressivo do uso diferenciado da força, utilizando-se <strong id="txtMeioForca">____________________________</strong>, do que resultou em <strong id="txtResultadoForca">____________________________</strong>. Para constar, lavra-se o presente registro.
+          <div class="empty-note no-print" style="margin-bottom:4px;">
+            Utilize um lançamento para cada acusado ou para cada desfecho. Ex.: um acusado socorrido com vida e outro com óbito/encaminhamento legal devem ser lançados em registros separados.
           </div>
+          <div id="resistencias"></div>
         </div>
 
         <section class="signature-general">
@@ -425,6 +418,32 @@
     </div>
   </template>
 
+
+  <template id="tplResistencia">
+    <div class="subcard resistencia-card">
+      <div class="subcard-head"><span>Registro de resistência</span><button type="button" class="small danger no-print" onclick="removeCard(this)">Remover</button></div>
+      <table class="form">
+        <colgroup><col style="width:30%"><col style="width:24%"><col style="width:23%"><col style="width:23%"></colgroup>
+        <tr>
+          <td><label class="lbl">Acusado(s) envolvido(s)</label><select class="acusado-resistencia" onchange="updateResistenciaText()"><option value="">Selecione...</option></select></td>
+          <td><label class="lbl">Tipo penal / infração</label><input class="tipo-penal-resistencia" oninput="updateResistenciaText()"></td>
+          <td><label class="lbl">Conduta de resistência apresentada</label><input class="conduta-resistencia" oninput="updateResistenciaText()" placeholder="Ex.: desobediência, agressão, fuga, injusta agressão..."></td>
+          <td><label class="lbl">Meio empregado para conter</label><input class="meio-forca" oninput="updateResistenciaText()" placeholder="Ex.: contenção física, algemas, instrumento/equipamento empregado..."></td>
+        </tr>
+      </table>
+      <table class="form">
+        <colgroup><col style="width:42%"><col style="width:58%"></colgroup>
+        <tr>
+          <td><label class="lbl">Resultado / desfecho</label><input class="resultado-forca" oninput="updateResistenciaText()" placeholder="Ex.: sem lesão, socorrido com vida, óbito, outro"></td>
+          <td><label class="lbl">Providência adotada</label><input class="providencia-resistencia" oninput="updateResistenciaText()" placeholder="Ex.: conduzido à delegacia, socorrido ao hospital, acionada perícia, etc."></td>
+        </tr>
+      </table>
+      <div class="resistance-text resistencia-texto-gerado">
+        No exercício legal da função policial, foi dada voz de prisão ao(s) acusado(s) <strong class="txt-acusado-resistencia">____________________________</strong>, em razão da prática, em tese, do delito/contravenção de <strong class="txt-tipo-penal">____________________________</strong>. Durante a intervenção, houve resistência à ação policial, caracterizada por <strong class="txt-conduta-resistencia">____________________________</strong>. Após as advertências cabíveis e observados os critérios de necessidade, proporcionalidade, moderação e legalidade, foi empregado uso diferenciado da força consistente em <strong class="txt-meio-forca">____________________________</strong>, resultando em <strong class="txt-resultado-forca">____________________________</strong>. Providência adotada: <strong class="txt-providencia-resistencia">____________________________</strong>. Para constar, lavra-se o presente registro.
+      </div>
+    </div>
+  </template>
+
   <script>
     const DRAFT_KEY = 'bo_bptrans_1cprv_v2';
     function onlyDigits(v){ return (v || '').replace(/\D/g,''); }
@@ -484,6 +503,7 @@
       document.querySelectorAll('.arma-card .subcard-head span').forEach((el,i)=>el.textContent='Arma de fogo '+(i+1));
       document.querySelectorAll('.cartucho-card .subcard-head span').forEach((el,i)=>el.textContent='Cartucho '+(i+1));
       document.querySelectorAll('.veiculo-card .subcard-head span').forEach((el,i)=>el.textContent='Veículo relacionado/apreendido '+(i+1));
+      document.querySelectorAll('.resistencia-card .subcard-head span').forEach((el,i)=>el.textContent='Registro de resistência '+(i+1));
     }
 
     function toggleSolicitante(){
@@ -503,11 +523,74 @@
     }
     function toggleList(checkId,listId,emptyId){ const checked=document.getElementById(checkId).checked; document.getElementById(listId).classList.toggle('hidden', checked); document.getElementById(emptyId).classList.toggle('hidden', !checked); }
     function toggleObjetos(){ const checked=document.getElementById('semObjeto').checked; document.getElementById('objetosBox').style.display = checked ? 'none' : 'table'; const empty=document.getElementById('objetoEmpty'); if(empty) empty.classList.toggle('hidden', !checked); }
-    function toggleResistencia(){ const checked=document.getElementById('houveResistencia').checked; document.getElementById('resistenciaBox').classList.toggle('hidden', !checked); document.getElementById('semResistenciaBox').classList.toggle('hidden', checked); updateResistenciaText(); }
-    function updateAcusadoOptions(){ const sel=document.getElementById('acusadoResistencia'); if(!sel)return; const current=sel.value; const names=Array.from(document.querySelectorAll('.nome-acusado')).map(el=>el.value.trim()).filter(Boolean); sel.innerHTML='<option value="">Selecione...</option>'+names.map(n=>'<option>'+escapeHtml(n)+'</option>').join(''); if(names.includes(current)) sel.value=current; }
-    function usarPrimeiroAcusado(){ if(!document.getElementById('usarAcusadoResistencia').checked) return; const first=document.querySelector('.nome-acusado')?.value?.trim(); if(first){ updateAcusadoOptions(); document.getElementById('acusadoResistencia').value=first; updateResistenciaText(); } }
-    function updateResistenciaText(){ usarPrimeiroAcusadoSilencioso(); const accused=document.getElementById('acusadoResistencia')?.value || '____________________________'; const tipo=document.getElementById('tipoPenalResistencia')?.value || '____________________________'; const meio=document.getElementById('meioForca')?.value || '____________________________'; const resultado=document.getElementById('resultadoForca')?.value || '____________________________'; document.getElementById('txtAcusadoResistencia').textContent=accused; document.getElementById('txtTipoPenal').textContent=tipo; document.getElementById('txtMeioForca').textContent=meio; document.getElementById('txtResultadoForca').textContent=resultado; }
-    function usarPrimeiroAcusadoSilencioso(){ const ck=document.getElementById('usarAcusadoResistencia'); if(!ck || !ck.checked)return; const first=document.querySelector('.nome-acusado')?.value?.trim(); const sel=document.getElementById('acusadoResistencia'); if(first && sel && sel.value!==first){ updateAcusadoOptions(); sel.value=first; } }
+    function toggleResistencia(){
+      const checked=document.getElementById('houveResistencia').checked;
+      document.getElementById('resistenciaBox').classList.toggle('hidden', !checked);
+      document.getElementById('semResistenciaBox').classList.toggle('hidden', checked);
+      const addBtn=document.getElementById('btnAddResistencia');
+      const todosBtn=document.getElementById('btnTodosResistencia');
+      if(addBtn) addBtn.style.display = checked ? '' : 'none';
+      if(todosBtn) todosBtn.style.display = checked ? '' : 'none';
+      if(checked && !document.querySelector('.resistencia-card')) addResistencia();
+      updateResistenciaText();
+    }
+    function addResistencia(){
+      document.getElementById('houveResistencia').checked=true;
+      document.getElementById('resistenciaBox').classList.remove('hidden');
+      document.getElementById('semResistenciaBox').classList.add('hidden');
+      cloneTemplate('tplResistencia','resistencias');
+      updateAcusadoOptions();
+      updateResistenciaText();
+    }
+    function criarResistenciasTodosAcusados(){
+      document.getElementById('houveResistencia').checked=true;
+      document.getElementById('resistenciaBox').classList.remove('hidden');
+      document.getElementById('semResistenciaBox').classList.add('hidden');
+      const nomes = getAcusadosNames();
+      if(!nomes.length){ alert('Preencha ao menos um acusado antes de criar os registros.'); return; }
+      const box=document.getElementById('resistencias');
+      if(box.children.length && !confirm('Deseja acrescentar registros para todos os acusados? Os registros já existentes serão mantidos.')) return;
+      nomes.forEach(nome=>{
+        cloneTemplate('tplResistencia','resistencias');
+        const card = document.querySelector('.resistencia-card:last-child');
+        updateAcusadoOptions();
+        const sel = card?.querySelector('.acusado-resistencia');
+        if(sel) sel.value = nome;
+      });
+      refreshCounters();
+      updateResistenciaText();
+    }
+    function getAcusadosNames(){ return Array.from(document.querySelectorAll('.nome-acusado')).map(el=>el.value.trim()).filter(Boolean); }
+    function updateAcusadoOptions(){
+      const names=getAcusadosNames();
+      document.querySelectorAll('.acusado-resistencia').forEach(sel=>{
+        const current=sel.value;
+        let html='<option value="">Selecione...</option>';
+        if(names.length>1) html+='<option value="__TODOS__">Todos os acusados qualificados</option>';
+        html += names.map(n=>'<option value="'+escapeHtml(n)+'">'+escapeHtml(n)+'</option>').join('');
+        sel.innerHTML=html;
+        if(current==='__TODOS__' || names.includes(current)) sel.value=current;
+      });
+    }
+    function updateResistenciaText(){
+      const names=getAcusadosNames();
+      document.querySelectorAll('.resistencia-card').forEach(card=>{
+        const sel=card.querySelector('.acusado-resistencia');
+        let acusado=sel?.value || '';
+        if(acusado==='__TODOS__') acusado = names.length ? names.join('; ') : 'todos os acusados qualificados';
+        const tipo=card.querySelector('.tipo-penal-resistencia')?.value || '____________________________';
+        const conduta=card.querySelector('.conduta-resistencia')?.value || '____________________________';
+        const meio=card.querySelector('.meio-forca')?.value || '____________________________';
+        const resultado=card.querySelector('.resultado-forca')?.value || '____________________________';
+        const providencia=card.querySelector('.providencia-resistencia')?.value || '____________________________';
+        card.querySelector('.txt-acusado-resistencia').textContent=acusado || '____________________________';
+        card.querySelector('.txt-tipo-penal').textContent=tipo;
+        card.querySelector('.txt-conduta-resistencia').textContent=conduta;
+        card.querySelector('.txt-meio-forca').textContent=meio;
+        card.querySelector('.txt-resultado-forca').textContent=resultado;
+        card.querySelector('.txt-providencia-resistencia').textContent=providencia;
+      });
+    }
     function escapeHtml(str){ return String(str).replace(/[&<>'"]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
     function serializeForm(){ const original=document.getElementById('boForm'); const clone=original.cloneNode(true); clone.querySelectorAll('.print-render').forEach(el=>el.remove()); clone.querySelectorAll('[data-bound-mask],[data-bound-grow],[data-bound-update]').forEach(el=>{el.removeAttribute('data-bound-mask');el.removeAttribute('data-bound-grow');el.removeAttribute('data-bound-update');}); const src=original.querySelectorAll('input,textarea,select'); const dst=clone.querySelectorAll('input,textarea,select'); src.forEach((s,i)=>{ const d=dst[i]; if(!d)return; if(s.tagName==='TEXTAREA') d.textContent=s.value; else if(s.tagName==='SELECT'){ Array.from(d.options).forEach(o=>o.removeAttribute('selected')); if(s.selectedIndex>=0 && d.options[s.selectedIndex]) d.options[s.selectedIndex].setAttribute('selected','selected'); } else if(s.type==='checkbox'||s.type==='radio'){ if(s.checked)d.setAttribute('checked','checked'); else d.removeAttribute('checked'); } else d.setAttribute('value',s.value); }); return {html:clone.innerHTML}; }
     function restoreForm(data){ if(!data || !data.html)return; document.getElementById('boForm').innerHTML=data.html; bind(); document.querySelectorAll('textarea').forEach(autoGrow); refreshCounters(); toggleSolicitante(); toggleEmpty('acusado'); toggleEmpty('vitima'); toggleEmpty('testemunha'); toggleList('semArma','armas','armaEmpty'); toggleList('semCartucho','cartuchos','cartuchoEmpty'); toggleList('semVeiculo','veiculos','veiculoEmpty'); toggleObjetos(); toggleResistencia(); updateAcusadoOptions(); updateResistenciaText(); }
