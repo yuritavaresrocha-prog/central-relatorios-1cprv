@@ -2,146 +2,276 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b355a" />
   <title>Central de Relatórios - 1ª CPRv / BPTRAN</title>
 
   <style>
     :root {
       --azul: #0f4c81;
-      --azul-escuro: #0b355a;
+      --azul-escuro: #082d4e;
+      --azul-medio: #176aa5;
       --azul-claro: #e8f1fb;
-      --cinza-bg: #f3f6f9;
-      --cinza-borda: #d6dee8;
+      --cinza-bg: #edf2f7;
+      --cinza-borda: #cfdae6;
       --texto: #111827;
       --muted: #64748b;
       --branco: #ffffff;
       --verde: #0f766e;
       --vermelho: #9f1239;
+      --sombra: 0 12px 30px rgba(15, 23, 42, 0.10);
     }
 
     * { box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--cinza-bg);
       color: var(--texto);
-      line-height: 1.35;
+      line-height: 1.4;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(23, 106, 165, .13), transparent 28%),
+        radial-gradient(circle at 88% 0%, rgba(15, 118, 110, .10), transparent 24%),
+        linear-gradient(180deg, #f8fafc 0%, var(--cinza-bg) 55%, #e7edf4 100%);
+      background-attachment: fixed;
     }
 
     .page {
-      width: min(1100px, 100%);
+      width: min(1160px, 100%);
       margin: 0 auto;
-      padding: 14px;
+      padding: 18px 14px 28px;
     }
 
     header {
-      background: var(--branco);
-      border: 1px solid var(--cinza-borda);
-      border-radius: 18px;
-      padding: 22px 14px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.98), rgba(244,248,252,.96));
+      border: 1px solid rgba(193, 207, 221, .95);
+      border-radius: 24px;
+      padding: 26px 16px 24px;
       text-align: center;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-      margin-bottom: 14px;
+      box-shadow: var(--sombra), inset 0 1px 0 rgba(255,255,255,.95);
+      margin-bottom: 16px;
+    }
+
+    header::before,
+    header::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: 999px;
+      filter: blur(.2px);
+    }
+
+    header::before {
+      width: 260px;
+      height: 260px;
+      top: -190px;
+      left: -70px;
+      background: radial-gradient(circle, rgba(23,106,165,.20), rgba(23,106,165,0));
+    }
+
+    header::after {
+      width: 230px;
+      height: 230px;
+      right: -80px;
+      bottom: -175px;
+      background: radial-gradient(circle, rgba(15,118,110,.18), rgba(15,118,110,0));
     }
 
     .brasao {
-      width: 82px;
+      position: relative;
+      z-index: 1;
+      width: 86px;
       height: auto;
       display: block;
       margin: 0 auto 10px;
+      filter: drop-shadow(0 5px 7px rgba(15, 23, 42, .18));
     }
 
     .orgao {
+      position: relative;
+      z-index: 1;
       font-size: 13px;
-      font-weight: 800;
-      letter-spacing: .4px;
+      font-weight: 900;
+      letter-spacing: .48px;
       text-transform: uppercase;
       color: var(--azul-escuro);
+      text-shadow: 0 1px 0 rgba(255,255,255,.95);
     }
 
     h1 {
-      margin: 6px 0 4px;
-      font-size: 25px;
-      line-height: 1.1;
+      position: relative;
+      z-index: 1;
+      margin: 7px 0 4px;
+      font-size: clamp(23px, 4vw, 31px);
+      line-height: 1.08;
       color: var(--azul-escuro);
       text-transform: uppercase;
-      letter-spacing: .3px;
+      letter-spacing: .45px;
+      text-shadow: 0 2px 0 rgba(255,255,255,.9), 0 4px 12px rgba(15,76,129,.12);
     }
 
     .subtitle {
+      position: relative;
+      z-index: 1;
       color: var(--muted);
       font-size: 14px;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     .search-card {
-      background: var(--branco);
+      background: rgba(255,255,255,.92);
       border: 1px solid var(--cinza-borda);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      border-radius: 17px;
+      padding: 13px;
+      margin-bottom: 16px;
+      box-shadow: 0 7px 20px rgba(15, 23, 42, 0.065), inset 0 1px 0 rgba(255,255,255,.95);
+      backdrop-filter: blur(8px);
     }
 
     .search-card label {
       display: block;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       text-transform: uppercase;
-      margin-bottom: 6px;
-      letter-spacing: .2px;
+      margin: 0 0 7px 2px;
+      letter-spacing: .35px;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      width: 19px;
+      height: 19px;
+      transform: translateY(-50%);
+      color: #7890a7;
+      pointer-events: none;
     }
 
     #searchInput {
       width: 100%;
       border: 1px solid var(--cinza-borda);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 13px;
+      padding: 12px 14px 12px 42px;
       font-size: 15px;
       outline: none;
-      background: #fff;
+      color: var(--texto);
+      background: linear-gradient(180deg, #fff, #f9fbfd);
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
 
     #searchInput:focus {
-      border-color: var(--azul);
-      box-shadow: 0 0 0 3px rgba(15, 76, 129, .12);
+      border-color: var(--azul-medio);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(15, 76, 129, .12), inset 0 1px 2px rgba(15,23,42,.04);
     }
 
     .section-title {
-      margin: 18px 2px 10px;
-      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 3px 11px;
+      font-size: 14px;
       font-weight: 900;
       color: var(--azul-escuro);
       text-transform: uppercase;
-      letter-spacing: .25px;
-      border-left: 5px solid var(--azul);
-      padding-left: 8px;
+      letter-spacing: .35px;
+      text-shadow: 0 1px 0 #fff;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 6px;
+      height: 25px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #2191d0, var(--azul-escuro));
+      box-shadow: 0 3px 8px rgba(15,76,129,.25);
+    }
+
+    .section-title::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(15,76,129,.28), transparent);
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .card {
-      background: var(--branco);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(255,255,255,.99), rgba(247,250,253,.97));
       border: 1px solid var(--cinza-borda);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+      border-radius: 19px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255,255,255,.95);
       display: flex;
       flex-direction: column;
-      min-height: 190px;
+      min-height: 208px;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--azul-escuro), #2f96cf, var(--verde));
+      opacity: .82;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #b5c8db;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.11), inset 0 1px 0 rgba(255,255,255,.98);
+    }
+
+    .card-featured {
+      border-color: #aec8df;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.99), rgba(238,247,252,.98));
+    }
+
+    .card-featured::before {
+      content: "NOVO FLUXO";
+      position: absolute;
+      top: 13px;
+      right: -31px;
+      width: 120px;
+      padding: 4px 0;
+      text-align: center;
+      transform: rotate(38deg);
+      background: linear-gradient(180deg, #d9eefb, #a9d2e9);
+      border: 1px solid #8dbbd6;
+      color: #0b456b;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .6px;
+      box-shadow: 0 2px 8px rgba(15,76,129,.15);
     }
 
     .card h2 {
-      margin: 0 0 6px;
+      margin: 2px 0 7px;
+      padding-right: 12px;
       font-size: 18px;
       color: var(--azul-escuro);
-      line-height: 1.15;
+      line-height: 1.17;
+      text-shadow: 0 1px 0 #fff;
     }
 
     .card p {
@@ -150,69 +280,196 @@
       font-size: 13px;
     }
 
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 9px 0 2px;
+    }
+
     .tag {
-      display: inline-block;
-      margin: 8px 0 10px;
-      background: var(--azul-claro);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(180deg, #f2f7fc, var(--azul-claro));
       color: var(--azul-escuro);
       border: 1px solid #c6dbf2;
       border-radius: 999px;
       padding: 5px 9px;
-      font-size: 11px;
-      font-weight: 800;
+      font-size: 10px;
+      font-weight: 900;
       text-transform: uppercase;
       width: fit-content;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+    }
+
+    .tag-nite {
+      background: linear-gradient(180deg, #f2f4f7, #e4e9ef);
+      border-color: #c7d0dc;
+      color: #334155;
     }
 
     .actions {
       margin-top: auto;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
-      flex-wrap: wrap;
-      padding-top: 12px;
+      padding-top: 14px;
+    }
+
+    .actions.three-actions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .actions.three-actions .btn-nite {
+      grid-column: 1 / -1;
     }
 
     button, .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 13px;
-      font-weight: 800;
+      --btn-top: #2276b3;
+      --btn-middle: #0f4c81;
+      --btn-bottom: #092f52;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      border: 1px solid rgba(5, 39, 68, .62);
+      border-radius: 12px;
+      padding: 10px 11px;
+      min-height: 44px;
+      font-size: 12px;
+      font-weight: 900;
       cursor: pointer;
       text-decoration: none;
       color: #fff;
-      background: var(--azul);
+      background: linear-gradient(145deg, var(--btn-top) 0%, var(--btn-middle) 53%, var(--btn-bottom) 100%);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      flex: 1 1 auto;
+      gap: 7px;
       text-align: center;
+      letter-spacing: .08px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.5);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -1px 0 rgba(0,0,0,.18),
+        0 6px 12px rgba(15, 76, 129, .22);
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
     }
 
-    .btn:hover { background: var(--azul-escuro); }
-    .btn-ios { background: var(--verde); }
-    .btn-ios:hover { background: #0b5f58; }
-    .btn-tool { background: #334155; }
-    .btn-tool:hover { background: #1f2937; }
-    .btn-danger { background: var(--vermelho); }
+    .btn::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -20%;
+      top: -80%;
+      width: 140%;
+      height: 115%;
+      transform: rotate(-7deg);
+      background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.05));
+      pointer-events: none;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-2px);
+      filter: saturate(1.08) brightness(1.06);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.34),
+        inset 0 -1px 0 rgba(0,0,0,.18),
+        0 9px 17px rgba(15, 76, 129, .30);
+      outline: none;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      filter: brightness(.97);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,.18), 0 3px 7px rgba(15,76,129,.18);
+    }
+
+    .btn-ios {
+      --btn-top: #24968c;
+      --btn-middle: #0f766e;
+      --btn-bottom: #084c47;
+      border-color: rgba(6, 72, 67, .7);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -1px 0 rgba(0,0,0,.18),
+        0 6px 12px rgba(15, 118, 110, .22);
+    }
+
+    .btn-nite {
+      --btn-top: #64748b;
+      --btn-middle: #334155;
+      --btn-bottom: #182231;
+      border-color: rgba(18, 29, 43, .74);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.25),
+        inset 0 -1px 0 rgba(0,0,0,.2),
+        0 6px 12px rgba(30, 41, 59, .25);
+    }
+
+    .platform-icons {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      flex: 0 0 auto;
+    }
+
+    .btn-icon {
+      width: 17px;
+      height: 17px;
+      display: block;
+      fill: currentColor;
+      stroke: currentColor;
+      stroke-width: 1.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+    }
+
+    .btn-icon.small {
+      width: 15px;
+      height: 15px;
+    }
 
     footer {
-      margin: 20px 0 6px;
+      margin: 24px 0 4px;
       text-align: center;
       color: var(--muted);
       font-size: 12px;
+      text-shadow: 0 1px 0 rgba(255,255,255,.9);
     }
 
     .hidden { display: none !important; }
 
-    @media (max-width: 780px) {
-      .page { padding: 10px; }
-      h1 { font-size: 20px; }
+    @media (max-width: 820px) {
+      .page { padding: 11px 10px 22px; }
+      header { border-radius: 19px; padding: 22px 12px 20px; }
+      .brasao { width: 78px; }
       .grid { grid-template-columns: 1fr; }
       .card { min-height: auto; }
-      .actions { flex-direction: column; }
-      .btn { width: 100%; }
+    }
+
+    @media (max-width: 520px) {
+      .actions,
+      .actions.three-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .actions.three-actions .btn-nite {
+        grid-column: auto;
+      }
+
+      .btn { width: 100%; min-height: 46px; }
+      .orgao { font-size: 11px; }
+      .subtitle { font-size: 13px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -220,7 +477,12 @@
 <body>
   <main class="page">
     <header>
-      <img class="brasao" src="brasao.png" alt="Brasão da PMPB" onerror="this.style.display='none'" />
+      <img
+        class="brasao"
+        src="brasao.png"
+        alt="Brasão da PMPB"
+        onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='Brasao_PMPB.png';}else{this.style.display='none';}"
+      />
       <div class="orgao">Polícia Militar da Paraíba • BPTRAN • 1ª CPRv</div>
       <h1>Central de Relatórios</h1>
       <div class="subtitle">Acesso rápido aos formulários operacionais da 1ª Companhia de Polícia Rodoviária</div>
@@ -228,7 +490,13 @@
 
     <section class="search-card">
       <label for="searchInput">Pesquisar relatório ou ferramenta</label>
-      <input id="searchInput" type="search" placeholder="Ex.: Checklist, CPU, Serviço Diário, Fisco, Remoção, BO..." oninput="filtrarCards()" />
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path d="m16.2 16.2 4.2 4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+        <input id="searchInput" type="search" placeholder="Ex.: Checklist, CPU, Serviço Diário, Fisco, PNATRANS, Remoção, BO..." oninput="filtrarCards()" />
+      </div>
     </section>
 
     <div class="section-title">Relatórios principais</div>
@@ -237,60 +505,161 @@
       <article class="card item-card" data-search="boletim ocorrência bo ciop copom acusado vítima testemunha arma cartucho objeto veículo relato auto resistência">
         <h2>Boletim de Ocorrência</h2>
         <p>Formulário de boletim com Nº CIOP/COPOM, dados da ocorrência, múltiplas guarnições, acusado, vítima, testemunha, apreensões, relato, resistência e recebimento.</p>
-        <span class="tag">BO / Ocorrência</span>
+        <div class="tag-row"><span class="tag">BO / Ocorrência</span></div>
         <div class="actions">
-          <a class="btn" href="boletim_ocorrencia_bptrans_1cprv.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="boletim_ocorrencia_bptrans_1cprv_ios.html">Abrir iOS</a>
+          <a class="btn" href="boletim_ocorrencia_bptrans_1cprv.html" aria-label="Abrir Boletim de Ocorrência no Android ou Chrome">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="boletim_ocorrencia_bptrans_1cprv_ios.html" aria-label="Abrir Boletim de Ocorrência no iOS Safari">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
         </div>
       </article>
 
       <article class="card item-card" data-search="serviço diario guarnição guarnições base tor relatorio json exportar">
         <h2>Relatório de Serviço Diário</h2>
         <p>Relatório das guarnições, bases e equipes de serviço. Possui rascunho local, geração de PDF e exportação JSON para alimentar o relatório do CPU/CPSU.</p>
-        <span class="tag">Guarnições</span>
+        <div class="tag-row"><span class="tag">Guarnições</span></div>
         <div class="actions">
-          <a class="btn" href="relatorio_servico_diario.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="relatorio_servico_diario_ios.html">Abrir iOS</a>
+          <a class="btn" href="relatorio_servico_diario.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="relatorio_servico_diario_ios.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
+        </div>
+      </article>
+
+      <article class="card card-featured item-card" data-search="ações educativas educação trânsito pnatrans nite campanha palestra checkpoint escola materiais equipe executora json indicadores">
+        <h2>Relatório de Ações Educativas</h2>
+        <p>Fluxo em duas etapas: a equipe executora registra os fatos da ação e encaminha o arquivo ao NITE, que consolida os dados, realiza o enquadramento PNATRANS e gera o relatório institucional.</p>
+        <div class="tag-row">
+          <span class="tag">Educação / PNATRANS</span>
+          <span class="tag tag-nite">Fluxo Equipe + NITE</span>
+        </div>
+        <div class="actions three-actions">
+          <a class="btn" href="relatorio_acoes_educativas_equipe.html" aria-label="Abrir relatório de ações educativas da equipe no Android ou Chrome">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="relatorio_acoes_educativas_equipe_ios.html" aria-label="Abrir relatório de ações educativas da equipe no iOS Safari">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
+          <a class="btn btn-nite" href="relatorio_acoes_educativas_nite.html" aria-label="Abrir área de uso exclusivo do NITE">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+            Uso exclusivo do NITE
+          </a>
         </div>
       </article>
 
       <article class="card item-card" data-search="checklist viatura vtr inspeção início serviço prefixo placa marca modelo quilometragem documentação equipamentos pneus conservação avaria defeito combustível assinatura pendências pdf">
         <h2>Checklist de Viatura</h2>
         <p>Inspeção da viatura no início do serviço, com identificação automática pelo prefixo, conferência dos itens obrigatórios, pendências guiadas, assinatura em tela e geração de PDF.</p>
-        <span class="tag">Inspeção de Viatura</span>
+        <div class="tag-row"><span class="tag">Inspeção de Viatura</span></div>
         <div class="actions">
-          <a class="btn" href="checklist_viatura.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="checklist_viatura_ios.html">Abrir iOS</a>
+          <a class="btn" href="checklist_viatura.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="checklist_viatura_ios.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
         </div>
       </article>
 
       <article class="card item-card" data-search="cpu cpsu relatorio operacional serviço 24h importação json campo 9 p3">
         <h2>Relatório Operacional CPU/CPSU</h2>
         <p>Relatório consolidado do serviço. Permite importar JSON das guarnições e de campos P3, salvar rascunho, preencher dados ao longo do serviço e gerar PDF.</p>
-        <span class="tag">CPU / CPSU</span>
+        <div class="tag-row"><span class="tag">CPU / CPSU</span></div>
         <div class="actions">
-          <a class="btn" href="relatorio_cpu.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="relatorio_cpu_ios.html">Abrir iOS</a>
+          <a class="btn" href="relatorio_cpu.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="relatorio_cpu_ios.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
         </div>
       </article>
 
       <article class="card item-card" data-search="fisco estadual acionamento ocorrência sefaz relatório fotos">
         <h2>Relatório de Acionamento do Fisco Estadual</h2>
         <p>Relatório individual para cada ocorrência ou acionamento relacionado ao Fisco Estadual, com campos de relato, envolvidos, veículo, material e fotos.</p>
-        <span class="tag">Fisco Estadual</span>
+        <div class="tag-row"><span class="tag">Fisco Estadual</span></div>
         <div class="actions">
-          <a class="btn" href="relatorio_fisco.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="relatorio_fisco_ios.html">Abrir iOS</a>
+          <a class="btn" href="relatorio_fisco.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="relatorio_fisco_ios.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
         </div>
       </article>
 
       <article class="card item-card" data-search="auto remoção veiculo veículo apreensão entrega destino recebedor assinatura foto">
         <h2>Auto Interno de Remoção e Entrega de Veículo</h2>
         <p>Controle interno de veículos removidos, com destino, recebedor, assinatura em tela, foto opcional e impressão com dois autos por página.</p>
-        <span class="tag">Remoção de Veículos</span>
+        <div class="tag-row"><span class="tag">Remoção de Veículos</span></div>
         <div class="actions">
-          <a class="btn" href="auto_remocao_veiculos.html">Abrir HTML</a>
-          <a class="btn btn-ios" href="auto_remocao_veiculos_ios.html">Abrir iOS</a>
+          <a class="btn" href="auto_remocao_veiculos.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M7 8.2h10a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-1v2h-2v-2h-4v2H8v-2H7a2 2 0 0 1-2-2v-6.8a2 2 0 0 1 2-2Z"></path><path d="m8 7-1.5-2M16 7l1.5-2" fill="none"></path><circle cx="9" cy="11.5" r=".8" fill="#fff" stroke="none"></circle><circle cx="15" cy="11.5" r=".8" fill="#fff" stroke="none"></circle></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"></circle><path d="M4.5 8h15M9.8 15.8 6.3 9.7M14.2 15.8l3.5-6.1" fill="none"></path></svg>
+            </span>
+            Android/Chrome
+          </a>
+          <a class="btn btn-ios" href="auto_remocao_veiculos_ios.html">
+            <span class="platform-icons" aria-hidden="true">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M15.2 5.2c.8-.9 1.3-2.2 1.1-3.2-1.2.1-2.5.8-3.3 1.8-.7.8-1.3 2.1-1 3.1 1.2.1 2.4-.6 3.2-1.7ZM19.3 13.1c0-2.7 2.2-4 2.3-4.1-1.2-1.8-3.2-2.1-3.9-2.1-1.7-.2-3.2 1-4.1 1s-2.1-1-3.5-1C8.3 7 6.6 8 5.7 9.5c-1.9 3.2-.5 8 1.3 10.6.9 1.3 2 2.8 3.4 2.7 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9 2.5-1.3 3.4-2.6c1-1.5 1.5-3 1.5-3.1-.1 0-3.3-1.3-3.3-4Z" transform="scale(.82) translate(2.3 1.2)"></path></svg>
+              <svg class="btn-icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m14.8 9.2-1.6 4-4 1.6 1.6-4 4-1.6Z" fill="currentColor" stroke="none"></path></svg>
+            </span>
+            iOS (Safari)
+          </a>
         </div>
       </article>
     </section>
