@@ -188,7 +188,7 @@
     .photo-card img {
       width: 100%;
       height: 132px;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
     }
 
@@ -225,16 +225,16 @@
     @page { size: A4; margin: 10mm; }
 
     @media print {
-      body { background: #fff; font-size: 11px; line-height: 1.22; }
+      body { background: #fff; font-size:13px; line-height: 1.22; }
       .wrap { margin: 0; max-width: none; padding: 0; }
       .card { box-shadow: none; border: 0; border-radius: 0; padding: 0; }
       .actions, .no-print, input[type="file"], .photo-tools, .photo-card figcaption { display: none !important; }
       .top { grid-template-columns: 54px 1fr auto; gap: 8px; margin-bottom: 8px; padding-bottom: 7px; }
       .brasao { width: 48px; }
-      h1 { font-size: 15px; }
-      .sub, .badge { font-size: 10px; }
+      h1 { font-size:17px; }
+      .sub, .badge { font-size:12px; }
       .grid { gap: 5px; }
-      label { font-size: 8.8px; margin-bottom: 2px; }
+      label { font-size:10.8px; margin-bottom: 2px; }
       input, textarea { display: none !important; }
       .print-text {
         display: block !important;
@@ -249,7 +249,7 @@
       .full .print-text { min-height: 34px; }
       .photos { grid-template-columns: repeat(2, 1fr); gap: 6px; page-break-inside: auto; }
       .photo-card { break-inside: avoid; border-radius: 4px; }
-      .photo-card img { height: 175px; object-fit: cover; }
+      .photo-card img { height: 175px; object-fit: contain; }
     }
 
     /* Ajustes específicos para iOS/Safari: mantém a impressão no mesmo padrão do Chrome */
@@ -268,7 +268,290 @@
     }
 
   </style>
-</head>
+<style id="cprv-screen-ui-v3">
+/* CPRV_SCREEN_UI_V3 — camada visual exclusiva da interface.
+   Deliberadamente restrita a @media screen para não alterar PDF/impressão. */
+@media screen {
+  :root {
+    --cprv-blue:#0f4c81;
+    --cprv-blue-dark:#082d4e;
+    --cprv-blue-mid:#176aa5;
+    --cprv-teal:#0f766e;
+    --cprv-teal-dark:#0b5d57;
+    --cprv-bg:#edf2f7;
+    --cprv-card:#ffffff;
+    --cprv-border:#cdd9e5;
+    --cprv-text:#172033;
+    --cprv-muted:#64748b;
+    --cprv-danger:#9f1239;
+    --cprv-warning:#b45309;
+    --cprv-shadow:0 12px 30px rgba(15,23,42,.09);
+    --cprv-shadow-soft:0 6px 18px rgba(15,23,42,.07);
+  }
+
+  html { background:#e7edf4; }
+  body {
+    color:var(--cprv-text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(23,106,165,.13), transparent 26%),
+      radial-gradient(circle at 92% 2%, rgba(15,118,110,.10), transparent 24%),
+      linear-gradient(180deg,#f8fafc 0%,var(--cprv-bg) 55%,#e7edf4 100%) !important;
+    background-attachment:fixed !important;
+    min-height:100vh;
+  }
+
+  .page,.wrap,.app-shell {
+    position:relative;
+  }
+
+  /* Barra de ações comum */
+  .toolbar {
+    top:max(8px, env(safe-area-inset-top)) !important;
+    margin:8px auto 14px !important;
+    padding:9px !important;
+    border:1px solid rgba(190,204,218,.86) !important;
+    border-radius:16px !important;
+    background:rgba(248,250,252,.90) !important;
+    box-shadow:0 9px 25px rgba(15,23,42,.09), inset 0 1px 0 rgba(255,255,255,.96) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(1.15) !important;
+    backdrop-filter:blur(14px) saturate(1.15) !important;
+  }
+  .toolbar-inner { gap:8px !important; }
+  .toolbar-spacer { min-width:8px; }
+
+  button,.btn,.filebtn,.pending-badge,.mini-btn,.detail-toggle {
+    font-family:inherit !important;
+    border-radius:11px !important;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, filter .16s ease, background .16s ease !important;
+    -webkit-tap-highlight-color:transparent;
+  }
+  button,.btn,.filebtn {
+    border:1px solid rgba(7,55,94,.18) !important;
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    color:#fff !important;
+    box-shadow:0 5px 12px rgba(8,45,78,.18), inset 0 1px 0 rgba(255,255,255,.18) !important;
+    font-weight:800 !important;
+    letter-spacing:.01em;
+  }
+  button:hover,.btn:hover,.filebtn:hover,.pending-badge:hover,.mini-btn:hover,.detail-toggle:hover {
+    transform:translateY(-1px);
+    filter:brightness(1.035);
+  }
+  button:active,.btn:active,.filebtn:active,.pending-badge:active,.mini-btn:active,.detail-toggle:active {
+    transform:translateY(0) scale(.985);
+  }
+  button:focus-visible,.btn:focus-visible,.filebtn:focus-visible,.pending-badge:focus-visible,.mini-btn:focus-visible,.detail-toggle:focus-visible,
+  input:focus-visible,select:focus-visible,textarea:focus-visible {
+    outline:3px solid rgba(23,106,165,.22) !important;
+    outline-offset:2px;
+  }
+
+  button.secondary,.btn.secondary,.filebtn.secondary,.secondary,
+  .toolbar .btn:not(.primary):not(.danger), .mini-btn, .detail-toggle {
+    background:linear-gradient(180deg,#fff,#f4f7fa) !important;
+    color:var(--cprv-blue-dark) !important;
+    border-color:#c7d4e0 !important;
+    box-shadow:0 4px 10px rgba(15,23,42,.07), inset 0 1px 0 #fff !important;
+  }
+  button.danger,.btn.danger,.danger {
+    background:linear-gradient(145deg,#b4234f,#861337) !important;
+    color:#fff !important;
+    border-color:rgba(112,8,43,.22) !important;
+  }
+  button.success,button.ok,.btn.success,.btn.ok,.ok {
+    background:linear-gradient(145deg,#159084,var(--cprv-teal-dark)) !important;
+    color:#fff !important;
+    border-color:rgba(9,84,78,.22) !important;
+  }
+  button.warn,.btn.warn,.warn {
+    background:linear-gradient(145deg,#d88416,#a84607) !important;
+    color:#fff !important;
+    border-color:rgba(123,51,5,.20) !important;
+  }
+  button.purple,.btn.purple,.purple {
+    background:linear-gradient(145deg,#7c3aed,#5b21b6) !important;
+    color:#fff !important;
+  }
+  .btn.primary,.primary {
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    color:#fff !important;
+  }
+  .pending-badge {
+    background:linear-gradient(180deg,#fff,#f5f8fb) !important;
+    color:var(--cprv-blue-dark) !important;
+    border:1px solid #c7d4e0 !important;
+    box-shadow:0 4px 10px rgba(15,23,42,.07) !important;
+  }
+  .pending-badge.has-pending {
+    color:var(--cprv-danger) !important;
+    border-color:#e4a7b9 !important;
+    background:linear-gradient(180deg,#fff,#fff5f7) !important;
+  }
+
+  /* Superfícies e cartões */
+  .sheet,.report,.auto-card,.card,.screen-help,.form-section,.unit-box,.entry,.subcard,.photo-tools,.signature-card,.gov-box,.notice,.ios-guide {
+    border-color:var(--cprv-border) !important;
+  }
+  .sheet,.report,.auto-card,.card {
+    background:rgba(255,255,255,.97) !important;
+    box-shadow:var(--cprv-shadow) !important;
+  }
+  .sheet,.report,.auto-card {
+    border-radius:20px !important;
+  }
+  .sheet { overflow-x:auto !important; overflow-y:visible !important; }
+  .report { overflow:hidden; }
+  .auto-card { overflow:visible; }
+  .card { border-radius:16px !important; }
+  .screen-help,.notice,.ios-guide {
+    border-radius:13px !important;
+    box-shadow:var(--cprv-shadow-soft) !important;
+    background:linear-gradient(145deg,#fff,#f5f9fc) !important;
+  }
+  .report-header,.doc-head,.top {
+    background:
+      radial-gradient(circle at 12% 0%,rgba(23,106,165,.10),transparent 30%),
+      linear-gradient(145deg,#fff,#f5f8fb) !important;
+  }
+  .report-header { border-bottom-color:var(--cprv-blue) !important; }
+
+  /* Títulos e hierarquia visual */
+  h1,.head-title,.pm-title,.brand,.org-line { color:var(--cprv-blue-dark) !important; }
+  h1 { letter-spacing:.015em !important; }
+  .section-title,h2.sec,.sec-title,.unit-title,.form-section h2 {
+    letter-spacing:.025em !important;
+  }
+  h2.sec,.sec-title,.section-title {
+    color:var(--cprv-blue-dark) !important;
+    border-left-color:var(--cprv-blue-mid) !important;
+  }
+  .form-section h2,.unit-title {
+    background:linear-gradient(135deg,var(--cprv-blue-dark),var(--cprv-blue-mid)) !important;
+    color:#fff !important;
+  }
+  .subtitle,.sub,.hint,.helper,.muted-note,.header-meta,.status { color:var(--cprv-muted) !important; }
+
+  /* Campos: mesma linguagem visual em todos os formulários */
+  label,label.lbl,.lbl,.field-label,.detail-panel label {
+    color:#405268 !important;
+    font-family:inherit !important;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+  select,textarea {
+    font-family:inherit !important;
+    color:var(--cprv-text) !important;
+    background:linear-gradient(180deg,#fff,#fbfcfd) !important;
+    border:1px solid #b9c8d5 !important;
+    border-radius:9px !important;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.025) !important;
+    transition:border-color .16s ease, box-shadow .16s ease, background .16s ease !important;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):hover,
+  select:hover,textarea:hover { border-color:#97adbf !important; }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):focus,
+  select:focus,textarea:focus {
+    border-color:var(--cprv-blue-mid) !important;
+    background:#fff !important;
+    box-shadow:0 0 0 4px rgba(23,106,165,.11), inset 0 1px 2px rgba(15,23,42,.025) !important;
+  }
+  input[readonly],textarea[readonly],.fixed {
+    background:linear-gradient(180deg,#f4f7fa,#eef3f7) !important;
+    color:#44576b !important;
+  }
+  input[type="checkbox"],input[type="radio"] { accent-color:var(--cprv-blue); }
+
+  /* Tabelas de preenchimento */
+  table { border-color:#c8d4df !important; }
+  th {
+    background:linear-gradient(180deg,#dceaf6,#cbddec) !important;
+    color:#173954 !important;
+    border-color:#9fb3c4 !important;
+  }
+  td { border-color:#c4d0db !important; }
+  td.group,.stripe td,.stripe th,tr.stripe td {
+    background:linear-gradient(180deg,#dceaf6,#cbddec) !important;
+    color:#173954 !important;
+  }
+  .form td,.form th { border-color:#b9c7d3 !important; }
+  .form .section-title,.section-title {
+    background:linear-gradient(90deg,#e3eff9,#f5f9fc) !important;
+  }
+  .subcard-head {
+    background:linear-gradient(90deg,#e3eff9,#f5f9fc) !important;
+    color:var(--cprv-blue-dark) !important;
+    border-bottom-color:#b9c7d3 !important;
+  }
+
+  /* Blocos interativos */
+  .checks label,.choice span,.fuel-option span {
+    border-color:#b9c8d5 !important;
+    box-shadow:0 2px 6px rgba(15,23,42,.035);
+  }
+  .checks label:hover,.choice span:hover,.fuel-option span:hover {
+    border-color:#8fa8bb !important;
+    background:#f8fbfd !important;
+  }
+  .choice input:checked + span {
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    border-color:var(--cprv-blue-dark) !important;
+  }
+  .fuel-option input:checked + span {
+    background:linear-gradient(145deg,#245b8f,#173b66) !important;
+    border-color:#173b66 !important;
+  }
+  .detail-panel,.auto-ref {
+    background:linear-gradient(145deg,#f7fafc,#eef4f8) !important;
+    border-color:#d3dee7 !important;
+  }
+
+  /* Fotos e assinaturas */
+  .signature-box,.photo-box,.photo-card,.photo-preview,.canvas-wrap {
+    border-color:#aebfcd !important;
+    background:#fff !important;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.035);
+  }
+  .signature-box,.photo-box,.photo-card { border-radius:12px !important; }
+  .modal { -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); }
+  .modal-card,.modal-box {
+    border:1px solid rgba(201,213,224,.95) !important;
+    border-radius:20px !important;
+    box-shadow:0 24px 70px rgba(2,20,36,.28) !important;
+  }
+
+  /* Elementos específicos que ficavam visualmente "antigos" */
+  .visto,.auto-count,.badge {
+    border-color:#b9c8d5 !important;
+    border-radius:10px !important;
+    background:linear-gradient(180deg,#fff,#f5f8fa) !important;
+    box-shadow:0 3px 9px rgba(15,23,42,.055) !important;
+  }
+  .declaracao,.passagem-texto,.empty-note {
+    border-color:#c7d3de !important;
+    background:linear-gradient(145deg,#fbfdff,#f3f7fa) !important;
+    border-radius:10px !important;
+  }
+  .watermark { color:rgba(15,76,129,.27) !important; }
+
+  /* Scrollbar discreta em navegadores compatíveis */
+  * { scrollbar-width:thin; scrollbar-color:#a9bac8 transparent; }
+  *::-webkit-scrollbar { width:9px; height:9px; }
+  *::-webkit-scrollbar-thumb { background:#b2c1cd; border-radius:999px; border:2px solid transparent; background-clip:padding-box; }
+
+  @media (max-width:760px) {
+    body { background-attachment:scroll !important; }
+    .page,.wrap,.app-shell { padding-left:max(8px,env(safe-area-inset-left)) !important; padding-right:max(8px,env(safe-area-inset-right)) !important; }
+    .toolbar {
+      top:max(5px,env(safe-area-inset-top)) !important;
+      border-radius:14px !important;
+      gap:7px !important;
+    }
+    .toolbar button,.toolbar .btn,.toolbar .filebtn { min-height:44px; }
+    .sheet,.report,.auto-card { border-radius:16px !important; }
+    .card { border-radius:14px !important; }
+  }
+}
+</style></head>
 <body>
   <main class="wrap">
     <section class="card" id="relatorio">
@@ -459,7 +742,7 @@
         if (fotosSelecionadas.length >= MAX_FOTOS) { avisouLimite = true; break; }
         try {
           const src = await comprimirImagem(file);
-          fotosSelecionadas.push({ src });
+          fotosSelecionadas.push({ src, original: src });
         } catch (e) {
           console.warn(e);
         }
@@ -479,11 +762,20 @@
         fig.className = 'photo-card';
         fig.innerHTML = `
           <img src="${foto.src}" alt="Foto ${index + 1} do atendimento" />
-          <figcaption><span>Foto ${index + 1}</span><button class="danger" type="button" onclick="removerFoto(${index})">Remover</button></figcaption>
+          <figcaption><span>Foto ${index + 1}</span><span class="no-print" style="display:flex;gap:5px;margin-left:auto"><button class="secondary photo-adjust-inline" type="button" onclick="ajustarEnquadramentoFoto(${index})">Ajustar</button><button class="danger" type="button" onclick="removerFoto(${index})">Remover</button></span></figcaption>
         `;
         preview.appendChild(fig);
       });
       contador.textContent = `${fotosSelecionadas.length} foto(s) adicionada(s)`;
+    }
+
+    async function ajustarEnquadramentoFoto(index) {
+      const foto = fotosSelecionadas[index];
+      if (!foto) return;
+      try {
+        const novo = await PhotoFramer.open(foto.original || foto.src, { aspect: 2, maxWidth: 1600, quality: .88, title: `Ajustar Foto ${index + 1}` });
+        if (novo) { foto.src = novo; renderizarFotos(); }
+      } catch (e) { console.warn(e); alert('Não foi possível abrir o ajuste de enquadramento desta foto.'); }
     }
 
     function removerFoto(index) {
@@ -532,5 +824,95 @@
     prepararCamposParaImpressao();
     renderizarFotos();
   </script>
+
+<style id="photoFramerStyles">
+  #photoFramerModal{position:fixed;inset:0;z-index:5000;background:rgba(2,12,23,.94);display:none;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+  #photoFramerModal.open{display:flex}
+  .pf-card{width:min(980px,100%);height:min(820px,97dvh);background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);border:1px solid rgba(148,163,184,.7);border-radius:20px;padding:14px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;box-shadow:0 26px 80px rgba(0,0,0,.42)}
+  .pf-head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:2px 2px 10px;border-bottom:1px solid #dbe5ef}.pf-head-copy{min-width:0}.pf-head strong{font-size:17px;color:#082d4e}.pf-head span{display:block;margin-top:3px;font-size:12px;line-height:1.35;color:#526579}.pf-head span b{color:#0f4c81}
+  .pf-stage{min-height:0;background:#020617;justify-self:center;align-self:center;border:4px solid #38bdf8;outline:2px solid #fff;outline-offset:-6px;border-radius:15px;overflow:hidden;touch-action:none;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #0f4c81,0 14px 36px rgba(2,12,23,.35),0 0 28px rgba(56,189,248,.22)}
+  #pfCanvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}.pf-stage.dragging #pfCanvas{cursor:grabbing}
+  .pf-crop-overlay{position:absolute;inset:0;z-index:3;pointer-events:none;background-image:linear-gradient(to right,transparent 33.15%,rgba(255,255,255,.46) 33.15%,rgba(255,255,255,.46) 33.48%,transparent 33.48%,transparent 66.48%,rgba(255,255,255,.46) 66.48%,rgba(255,255,255,.46) 66.81%,transparent 66.81%),linear-gradient(to bottom,transparent 33.15%,rgba(255,255,255,.46) 33.15%,rgba(255,255,255,.46) 33.48%,transparent 33.48%,transparent 66.48%,rgba(255,255,255,.46) 66.48%,rgba(255,255,255,.46) 66.81%,transparent 66.81%)}
+  .pf-crop-badge{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);padding:6px 9px;border:1px solid rgba(255,255,255,.9);border-radius:999px;background:rgba(8,45,78,.92);color:#fff;font-size:10px;font-weight:900;letter-spacing:.45px;text-transform:uppercase;box-shadow:0 3px 12px rgba(0,0,0,.28)}
+  .pf-crop-help{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 20px);padding:6px 10px;border-radius:8px;background:rgba(2,12,23,.76);color:#fff;font-size:11px;font-weight:750;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.24)}
+  .pf-corner{position:absolute;width:28px;height:28px;border-color:#fff;border-style:solid;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}.pf-corner.tl{left:7px;top:7px;border-width:3px 0 0 3px;border-radius:7px 0 0 0}.pf-corner.tr{right:7px;top:7px;border-width:3px 3px 0 0;border-radius:0 7px 0 0}.pf-corner.bl{left:7px;bottom:7px;border-width:0 0 3px 3px;border-radius:0 0 0 7px}.pf-corner.br{right:7px;bottom:7px;border-width:0 3px 3px 0;border-radius:0 0 7px 0}
+  .pf-footer{display:grid;gap:9px}.pf-controls-panel{border:1px solid #d6e1eb;border-radius:12px;background:#fff;padding:9px 11px;box-shadow:0 3px 10px rgba(15,23,42,.05)}.pf-controls-label{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px;color:#334155}.pf-controls-label strong{font-size:12px}.pf-controls-label span{font-size:11px;color:#64748b}
+  .pf-controls{display:grid;grid-template-columns:42px minmax(100px,1fr) 42px 62px;gap:8px;align-items:center;font-size:12px;color:#475569}.pf-controls input[type="range"]{width:100%;accent-color:#176aa5}.pf-zoom-btn{height:38px;border:1px solid #b8c8d7;border-radius:9px;background:#f8fafc;color:#082d4e;font-size:20px;font-weight:900;cursor:pointer;line-height:1}.pf-zoom-value{text-align:center;font-weight:900;color:#0f4c81;background:#eaf2fb;border-radius:8px;padding:8px 4px}
+  .pf-actions{display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}.pf-btn{border:1px solid #c7d4e0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;background:#fff;color:#082d4e;min-height:42px}.pf-btn.primary{border-color:#0f4c81;background:linear-gradient(145deg,#176aa5,#082d4e);color:#fff}.pf-btn.danger{color:#9f1239}.pf-note{font-size:11px;color:#64748b;text-align:center;line-height:1.35}.pf-note strong{color:#0f4c81}
+  .photo-adjust-btn{position:absolute;left:6px;top:6px;z-index:3;border:1px solid rgba(255,255,255,.82)!important;border-radius:999px!important;padding:5px 8px!important;background:rgba(8,45,78,.90)!important;color:#fff!important;font-size:10px!important;font-weight:850!important;box-shadow:0 2px 8px rgba(0,0,0,.18)!important;cursor:pointer!important}
+  .photo-card{position:relative}.photo-card .photo-adjust-inline{margin-left:auto}
+  @media(max-width:700px){#photoFramerModal{padding:0}.pf-card{width:100%;height:100dvh;max-height:none;border-radius:0;border:0;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));gap:8px}.pf-head{padding-bottom:7px}.pf-head strong{font-size:15px}.pf-head span{font-size:11px}.pf-stage{border-width:3px;border-radius:11px}.pf-crop-badge{top:7px;left:7px;font-size:9px;padding:5px 7px}.pf-crop-help{bottom:7px;font-size:10px;padding:5px 7px}.pf-controls-panel{padding:7px 8px}.pf-controls-label span{display:none}.pf-controls{grid-template-columns:40px minmax(80px,1fr) 40px 56px;gap:6px}.pf-actions{display:grid;grid-template-columns:1fr 1fr}.pf-actions .pf-btn{width:100%;padding:9px 8px}.pf-actions .pf-btn.primary{grid-column:1/-1}.pf-note{font-size:10px}}
+  @media(max-width:390px){.pf-head span{display:none}.pf-crop-help{max-width:78%;white-space:normal}.pf-controls-label{margin-bottom:5px}.pf-actions .pf-btn{font-size:12px}}
+  @media print{#photoFramerModal,.photo-adjust-btn,.photo-adjust-inline{display:none!important}}
+</style>
+
+<script id="photoFramerScript">
+(function(){
+  if(window.PhotoFramer)return;
+  const modal=document.createElement('div');
+  modal.id='photoFramerModal';modal.setAttribute('aria-hidden','true');
+  modal.innerHTML=`<div class="pf-card"><div class="pf-head"><div class="pf-head-copy"><strong id="pfTitle">Ajustar enquadramento</strong><span>A <b>moldura azul</b> delimita exatamente a área que aparecerá no relatório.</span></div><button type="button" class="pf-btn danger" id="pfCancelTop">Fechar</button></div><div class="pf-stage" id="pfStage"><canvas id="pfCanvas"></canvas><div class="pf-crop-overlay" aria-hidden="true"><span class="pf-crop-badge" id="pfFrameInfo">Área final da fotografia</span><span class="pf-crop-help">Arraste a foto para reposicionar dentro da moldura</span><i class="pf-corner tl"></i><i class="pf-corner tr"></i><i class="pf-corner bl"></i><i class="pf-corner br"></i></div></div><div class="pf-footer"><div class="pf-controls-panel"><div class="pf-controls-label"><strong>Zoom da fotografia</strong><span>Aumente ou reduza sem alterar a moldura final.</span></div><div class="pf-controls"><button type="button" class="pf-zoom-btn" id="pfZoomOut" aria-label="Diminuir zoom">−</button><input id="pfZoom" type="range" min="1" max="3.5" step="0.01" value="1" aria-label="Zoom da fotografia"><button type="button" class="pf-zoom-btn" id="pfZoomIn" aria-label="Aumentar zoom">+</button><span class="pf-zoom-value" id="pfZoomValue">100%</span></div></div><div class="pf-actions"><button type="button" class="pf-btn" id="pfReset">Restaurar</button><button type="button" class="pf-btn" id="pfRotate">Girar 90°</button><button type="button" class="pf-btn danger" id="pfCancel">Cancelar</button><button type="button" class="pf-btn primary" id="pfSave">Usar este enquadramento</button></div><div class="pf-note"><strong>Somente o conteúdo dentro da moldura azul será salvo.</strong> As linhas auxiliam na composição e não aparecem na fotografia final.</div></div></div>`;
+  document.body.appendChild(modal);
+  const stage=modal.querySelector('#pfStage'),canvas=modal.querySelector('#pfCanvas'),ctx=canvas.getContext('2d');
+  const zoomInput=modal.querySelector('#pfZoom'),zoomValue=modal.querySelector('#pfZoomValue');
+  let img=null,state=null,resolver=null,dragging=false,last=null,resizeTimer=null,orientedCanvasCache=null,orientedRotationCache=null;
+  function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+  function ratioLabel(a){const known=[[1,'1:1'],[4/3,'4:3'],[3/2,'3:2'],[5/3,'5:3'],[16/9,'16:9'],[2,'2:1']];const hit=known.find(([v])=>Math.abs(a-v)<.015);return hit?hit[1]:a.toFixed(2)+':1';}
+  function normalizedRotation(){return ((state.rotation%360)+360)%360;}
+  function oriented(){const r=normalizedRotation();return r===90||r===270?{w:img.naturalHeight,h:img.naturalWidth}:{w:img.naturalWidth,h:img.naturalHeight};}
+  function getOrientedCanvas(){
+    const r=normalizedRotation();
+    if(orientedCanvasCache&&orientedRotationCache===r)return orientedCanvasCache;
+    const o=oriented(),oc=document.createElement('canvas');
+    oc.width=Math.max(1,o.w);oc.height=Math.max(1,o.h);
+    const ox=oc.getContext('2d');
+    ox.save();ox.translate(oc.width/2,oc.height/2);ox.rotate(r*Math.PI/180);
+    ox.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);ox.restore();
+    orientedCanvasCache=oc;orientedRotationCache=r;return oc;
+  }
+  function viewportSize(){
+    const rect=canvas.getBoundingClientRect();
+    return {w:Math.max(1,rect.width||stage.clientWidth||1),h:Math.max(1,rect.height||stage.clientHeight||1)};
+  }
+  function metrics(){const v=viewportSize(),o=oriented();const base=Math.max(v.w/o.w,v.h/o.h);const scale=base*state.zoom;return {w:v.w,h:v.h,scale,ow:o.w,oh:o.h};}
+  function constrain(){if(!img||!state)return;const m=metrics();const mx=Math.max(0,(m.ow*m.scale-m.w)/2),my=Math.max(0,(m.oh*m.scale-m.h)/2);state.x=clamp(state.x,-mx,mx);state.y=clamp(state.y,-my,my);}
+  function currentCrop(){
+    const m=metrics();
+    const cw=Math.min(m.ow,m.w/m.scale),ch=Math.min(m.oh,m.h/m.scale);
+    let sx=m.ow/2-(m.w/2+state.x)/m.scale;
+    let sy=m.oh/2-(m.h/2+state.y)/m.scale;
+    sx=clamp(sx,0,Math.max(0,m.ow-cw));sy=clamp(sy,0,Math.max(0,m.oh-ch));
+    return {x:sx,y:sy,w:cw,h:ch};
+  }
+  function resize(){if(!img||!state)return;const card=modal.querySelector('.pf-card'),head=modal.querySelector('.pf-head'),footer=modal.querySelector('.pf-footer'),cs=getComputedStyle(card),padX=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight),padY=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom),gap=parseFloat(cs.rowGap)||10;const availW=Math.max(120,card.clientWidth-padX-8),availH=Math.max(120,card.clientHeight-padY-head.offsetHeight-footer.offsetHeight-gap*2-8),aspect=state.aspect;let sw=availW,sh=sw/aspect;if(sh>availH){sh=availH;sw=sh*aspect;}stage.style.width=Math.floor(sw)+'px';stage.style.height=Math.floor(sh)+'px';const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1);canvas.width=Math.max(1,Math.round((rect.width||stage.clientWidth||1)*dpr));canvas.height=Math.max(1,Math.round((rect.height||stage.clientHeight||1)*dpr));canvas.style.width='100%';canvas.style.height='100%';constrain();draw();}
+  function draw(targetCtx=ctx,w=null,h=null){
+    if(!img||!state)return;
+    const source=getOrientedCanvas(),crop=currentCrop();
+    const pw=Math.max(1,Math.round(w||targetCtx.canvas.width||1)),ph=Math.max(1,Math.round(h||targetCtx.canvas.height||1));
+    targetCtx.save();targetCtx.setTransform(1,0,0,1,0,0);targetCtx.clearRect(0,0,pw,ph);targetCtx.fillStyle='#111827';targetCtx.fillRect(0,0,pw,ph);
+    targetCtx.imageSmoothingEnabled=true;targetCtx.imageSmoothingQuality='high';
+    targetCtx.drawImage(source,crop.x,crop.y,crop.w,crop.h,0,0,pw,ph);targetCtx.restore();
+  }
+  function cancel(){if(!resolver)return;const r=resolver;resolver=null;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';r(null);}
+  function save(){if(!resolver)return;constrain();const aspect=state.aspect;const maxW=state.maxWidth||1600;let outW=maxW,outH=Math.round(outW/aspect);if(outH>1200){outH=1200;outW=Math.round(outH*aspect);}const out=document.createElement('canvas');out.width=outW;out.height=outH;const octx=out.getContext('2d');draw(octx,outW,outH);const data=out.toDataURL('image/jpeg',state.quality||.88);const r=resolver;resolver=null;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';r(data);}
+  function open(src,opts={}){return new Promise((resolve,reject)=>{if(resolver)cancel();resolver=resolve;img=new Image();img.onload=()=>{orientedCanvasCache=null;orientedRotationCache=null;state={zoom:1,x:0,y:0,rotation:0,aspect:opts.aspect||16/9,maxWidth:opts.maxWidth||1600,quality:opts.quality||.88};modal.querySelector('#pfTitle').textContent=opts.title||'Ajustar enquadramento';modal.querySelector('#pfFrameInfo').textContent='ÁREA FINAL DA FOTO • FORMATO '+ratioLabel(state.aspect);zoomInput.value='1';zoomValue.textContent='100%';stage.style.aspectRatio=String(state.aspect);modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';requestAnimationFrame(()=>setTimeout(resize,40));};img.onerror=()=>{resolver=null;reject(new Error('Não foi possível abrir a fotografia para enquadramento.'));};img.src=src;});}
+  function setZoom(value){if(!state)return;state.zoom=clamp(Number(value)||1,Number(zoomInput.min),Number(zoomInput.max));zoomInput.value=String(state.zoom);zoomValue.textContent=Math.round(state.zoom*100)+'%';constrain();draw();}
+  zoomInput.addEventListener('input',()=>setZoom(zoomInput.value));
+  modal.querySelector('#pfZoomOut').addEventListener('click',()=>setZoom((state?.zoom||1)-.1));
+  modal.querySelector('#pfZoomIn').addEventListener('click',()=>setZoom((state?.zoom||1)+.1));
+  modal.querySelector('#pfReset').addEventListener('click',()=>{if(!state)return;state.zoom=1;state.x=0;state.y=0;state.rotation=0;zoomInput.value='1';zoomValue.textContent='100%';constrain();draw();});
+  modal.querySelector('#pfRotate').addEventListener('click',()=>{if(!state)return;state.rotation=(state.rotation+90)%360;orientedCanvasCache=null;orientedRotationCache=null;state.x=0;state.y=0;constrain();draw();});
+  modal.querySelector('#pfCancel').addEventListener('click',cancel);modal.querySelector('#pfCancelTop').addEventListener('click',cancel);modal.querySelector('#pfSave').addEventListener('click',save);
+  canvas.addEventListener('pointerdown',e=>{if(!state)return;e.preventDefault();dragging=true;last={x:e.clientX,y:e.clientY};stage.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch(_){}});
+  canvas.addEventListener('pointermove',e=>{if(!dragging||!state)return;e.preventDefault();state.x+=e.clientX-last.x;state.y+=e.clientY-last.y;last={x:e.clientX,y:e.clientY};constrain();draw();});
+  function end(e){dragging=false;last=null;stage.classList.remove('dragging');try{canvas.releasePointerCapture(e.pointerId)}catch(_){}}
+  canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+  window.addEventListener('resize',()=>{if(!modal.classList.contains('open'))return;clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,80);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))cancel();});
+  window.PhotoFramer={open};
+})();
+</script>
+
+
 </body>
 </html>
