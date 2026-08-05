@@ -22,7 +22,290 @@ input[type="checkbox"]{-webkit-appearance:auto;appearance:auto}
 .ios-guide{border:1px solid #c7d2fe;background:linear-gradient(145deg,#eef2ff,#f8fafc);color:#3730a3;border-radius:11px;padding:10px 12px;margin:8px 0 12px;font-size:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
 @media(max-width:850px){.toolbar{display:grid;grid-template-columns:1fr 1fr}.toolbar button.ok{grid-column:1/-1}.toolbar button{width:100%}}
 </style>
-</head>
+<style id="cprv-screen-ui-v3">
+/* CPRV_SCREEN_UI_V3 — camada visual exclusiva da interface.
+   Deliberadamente restrita a @media screen para não alterar PDF/impressão. */
+@media screen {
+  :root {
+    --cprv-blue:#0f4c81;
+    --cprv-blue-dark:#082d4e;
+    --cprv-blue-mid:#176aa5;
+    --cprv-teal:#0f766e;
+    --cprv-teal-dark:#0b5d57;
+    --cprv-bg:#edf2f7;
+    --cprv-card:#ffffff;
+    --cprv-border:#cdd9e5;
+    --cprv-text:#172033;
+    --cprv-muted:#64748b;
+    --cprv-danger:#9f1239;
+    --cprv-warning:#b45309;
+    --cprv-shadow:0 12px 30px rgba(15,23,42,.09);
+    --cprv-shadow-soft:0 6px 18px rgba(15,23,42,.07);
+  }
+
+  html { background:#e7edf4; }
+  body {
+    color:var(--cprv-text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(23,106,165,.13), transparent 26%),
+      radial-gradient(circle at 92% 2%, rgba(15,118,110,.10), transparent 24%),
+      linear-gradient(180deg,#f8fafc 0%,var(--cprv-bg) 55%,#e7edf4 100%) !important;
+    background-attachment:fixed !important;
+    min-height:100vh;
+  }
+
+  .page,.wrap,.app-shell {
+    position:relative;
+  }
+
+  /* Barra de ações comum */
+  .toolbar {
+    top:max(8px, env(safe-area-inset-top)) !important;
+    margin:8px auto 14px !important;
+    padding:9px !important;
+    border:1px solid rgba(190,204,218,.86) !important;
+    border-radius:16px !important;
+    background:rgba(248,250,252,.90) !important;
+    box-shadow:0 9px 25px rgba(15,23,42,.09), inset 0 1px 0 rgba(255,255,255,.96) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(1.15) !important;
+    backdrop-filter:blur(14px) saturate(1.15) !important;
+  }
+  .toolbar-inner { gap:8px !important; }
+  .toolbar-spacer { min-width:8px; }
+
+  button,.btn,.filebtn,.pending-badge,.mini-btn,.detail-toggle {
+    font-family:inherit !important;
+    border-radius:11px !important;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, filter .16s ease, background .16s ease !important;
+    -webkit-tap-highlight-color:transparent;
+  }
+  button,.btn,.filebtn {
+    border:1px solid rgba(7,55,94,.18) !important;
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    color:#fff !important;
+    box-shadow:0 5px 12px rgba(8,45,78,.18), inset 0 1px 0 rgba(255,255,255,.18) !important;
+    font-weight:800 !important;
+    letter-spacing:.01em;
+  }
+  button:hover,.btn:hover,.filebtn:hover,.pending-badge:hover,.mini-btn:hover,.detail-toggle:hover {
+    transform:translateY(-1px);
+    filter:brightness(1.035);
+  }
+  button:active,.btn:active,.filebtn:active,.pending-badge:active,.mini-btn:active,.detail-toggle:active {
+    transform:translateY(0) scale(.985);
+  }
+  button:focus-visible,.btn:focus-visible,.filebtn:focus-visible,.pending-badge:focus-visible,.mini-btn:focus-visible,.detail-toggle:focus-visible,
+  input:focus-visible,select:focus-visible,textarea:focus-visible {
+    outline:3px solid rgba(23,106,165,.22) !important;
+    outline-offset:2px;
+  }
+
+  button.secondary,.btn.secondary,.filebtn.secondary,.secondary,
+  .toolbar .btn:not(.primary):not(.danger), .mini-btn, .detail-toggle {
+    background:linear-gradient(180deg,#fff,#f4f7fa) !important;
+    color:var(--cprv-blue-dark) !important;
+    border-color:#c7d4e0 !important;
+    box-shadow:0 4px 10px rgba(15,23,42,.07), inset 0 1px 0 #fff !important;
+  }
+  button.danger,.btn.danger,.danger {
+    background:linear-gradient(145deg,#b4234f,#861337) !important;
+    color:#fff !important;
+    border-color:rgba(112,8,43,.22) !important;
+  }
+  button.success,button.ok,.btn.success,.btn.ok,.ok {
+    background:linear-gradient(145deg,#159084,var(--cprv-teal-dark)) !important;
+    color:#fff !important;
+    border-color:rgba(9,84,78,.22) !important;
+  }
+  button.warn,.btn.warn,.warn {
+    background:linear-gradient(145deg,#d88416,#a84607) !important;
+    color:#fff !important;
+    border-color:rgba(123,51,5,.20) !important;
+  }
+  button.purple,.btn.purple,.purple {
+    background:linear-gradient(145deg,#7c3aed,#5b21b6) !important;
+    color:#fff !important;
+  }
+  .btn.primary,.primary {
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    color:#fff !important;
+  }
+  .pending-badge {
+    background:linear-gradient(180deg,#fff,#f5f8fb) !important;
+    color:var(--cprv-blue-dark) !important;
+    border:1px solid #c7d4e0 !important;
+    box-shadow:0 4px 10px rgba(15,23,42,.07) !important;
+  }
+  .pending-badge.has-pending {
+    color:var(--cprv-danger) !important;
+    border-color:#e4a7b9 !important;
+    background:linear-gradient(180deg,#fff,#fff5f7) !important;
+  }
+
+  /* Superfícies e cartões */
+  .sheet,.report,.auto-card,.card,.screen-help,.form-section,.unit-box,.entry,.subcard,.photo-tools,.signature-card,.gov-box,.notice,.ios-guide {
+    border-color:var(--cprv-border) !important;
+  }
+  .sheet,.report,.auto-card,.card {
+    background:rgba(255,255,255,.97) !important;
+    box-shadow:var(--cprv-shadow) !important;
+  }
+  .sheet,.report,.auto-card {
+    border-radius:20px !important;
+  }
+  .sheet { overflow-x:auto !important; overflow-y:visible !important; }
+  .report { overflow:hidden; }
+  .auto-card { overflow:visible; }
+  .card { border-radius:16px !important; }
+  .screen-help,.notice,.ios-guide {
+    border-radius:13px !important;
+    box-shadow:var(--cprv-shadow-soft) !important;
+    background:linear-gradient(145deg,#fff,#f5f9fc) !important;
+  }
+  .report-header,.doc-head,.top {
+    background:
+      radial-gradient(circle at 12% 0%,rgba(23,106,165,.10),transparent 30%),
+      linear-gradient(145deg,#fff,#f5f8fb) !important;
+  }
+  .report-header { border-bottom-color:var(--cprv-blue) !important; }
+
+  /* Títulos e hierarquia visual */
+  h1,.head-title,.pm-title,.brand,.org-line { color:var(--cprv-blue-dark) !important; }
+  h1 { letter-spacing:.015em !important; }
+  .section-title,h2.sec,.sec-title,.unit-title,.form-section h2 {
+    letter-spacing:.025em !important;
+  }
+  h2.sec,.sec-title,.section-title {
+    color:var(--cprv-blue-dark) !important;
+    border-left-color:var(--cprv-blue-mid) !important;
+  }
+  .form-section h2,.unit-title {
+    background:linear-gradient(135deg,var(--cprv-blue-dark),var(--cprv-blue-mid)) !important;
+    color:#fff !important;
+  }
+  .subtitle,.sub,.hint,.helper,.muted-note,.header-meta,.status { color:var(--cprv-muted) !important; }
+
+  /* Campos: mesma linguagem visual em todos os formulários */
+  label,label.lbl,.lbl,.field-label,.detail-panel label {
+    color:#405268 !important;
+    font-family:inherit !important;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+  select,textarea {
+    font-family:inherit !important;
+    color:var(--cprv-text) !important;
+    background:linear-gradient(180deg,#fff,#fbfcfd) !important;
+    border:1px solid #b9c8d5 !important;
+    border-radius:9px !important;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.025) !important;
+    transition:border-color .16s ease, box-shadow .16s ease, background .16s ease !important;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):hover,
+  select:hover,textarea:hover { border-color:#97adbf !important; }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):focus,
+  select:focus,textarea:focus {
+    border-color:var(--cprv-blue-mid) !important;
+    background:#fff !important;
+    box-shadow:0 0 0 4px rgba(23,106,165,.11), inset 0 1px 2px rgba(15,23,42,.025) !important;
+  }
+  input[readonly],textarea[readonly],.fixed {
+    background:linear-gradient(180deg,#f4f7fa,#eef3f7) !important;
+    color:#44576b !important;
+  }
+  input[type="checkbox"],input[type="radio"] { accent-color:var(--cprv-blue); }
+
+  /* Tabelas de preenchimento */
+  table { border-color:#c8d4df !important; }
+  th {
+    background:linear-gradient(180deg,#dceaf6,#cbddec) !important;
+    color:#173954 !important;
+    border-color:#9fb3c4 !important;
+  }
+  td { border-color:#c4d0db !important; }
+  td.group,.stripe td,.stripe th,tr.stripe td {
+    background:linear-gradient(180deg,#dceaf6,#cbddec) !important;
+    color:#173954 !important;
+  }
+  .form td,.form th { border-color:#b9c7d3 !important; }
+  .form .section-title,.section-title {
+    background:linear-gradient(90deg,#e3eff9,#f5f9fc) !important;
+  }
+  .subcard-head {
+    background:linear-gradient(90deg,#e3eff9,#f5f9fc) !important;
+    color:var(--cprv-blue-dark) !important;
+    border-bottom-color:#b9c7d3 !important;
+  }
+
+  /* Blocos interativos */
+  .checks label,.choice span,.fuel-option span {
+    border-color:#b9c8d5 !important;
+    box-shadow:0 2px 6px rgba(15,23,42,.035);
+  }
+  .checks label:hover,.choice span:hover,.fuel-option span:hover {
+    border-color:#8fa8bb !important;
+    background:#f8fbfd !important;
+  }
+  .choice input:checked + span {
+    background:linear-gradient(145deg,var(--cprv-blue-mid),var(--cprv-blue-dark)) !important;
+    border-color:var(--cprv-blue-dark) !important;
+  }
+  .fuel-option input:checked + span {
+    background:linear-gradient(145deg,#245b8f,#173b66) !important;
+    border-color:#173b66 !important;
+  }
+  .detail-panel,.auto-ref {
+    background:linear-gradient(145deg,#f7fafc,#eef4f8) !important;
+    border-color:#d3dee7 !important;
+  }
+
+  /* Fotos e assinaturas */
+  .signature-box,.photo-box,.photo-card,.photo-preview,.canvas-wrap {
+    border-color:#aebfcd !important;
+    background:#fff !important;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.035);
+  }
+  .signature-box,.photo-box,.photo-card { border-radius:12px !important; }
+  .modal { -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); }
+  .modal-card,.modal-box {
+    border:1px solid rgba(201,213,224,.95) !important;
+    border-radius:20px !important;
+    box-shadow:0 24px 70px rgba(2,20,36,.28) !important;
+  }
+
+  /* Elementos específicos que ficavam visualmente "antigos" */
+  .visto,.auto-count,.badge {
+    border-color:#b9c8d5 !important;
+    border-radius:10px !important;
+    background:linear-gradient(180deg,#fff,#f5f8fa) !important;
+    box-shadow:0 3px 9px rgba(15,23,42,.055) !important;
+  }
+  .declaracao,.passagem-texto,.empty-note {
+    border-color:#c7d3de !important;
+    background:linear-gradient(145deg,#fbfdff,#f3f7fa) !important;
+    border-radius:10px !important;
+  }
+  .watermark { color:rgba(15,76,129,.27) !important; }
+
+  /* Scrollbar discreta em navegadores compatíveis */
+  * { scrollbar-width:thin; scrollbar-color:#a9bac8 transparent; }
+  *::-webkit-scrollbar { width:9px; height:9px; }
+  *::-webkit-scrollbar-thumb { background:#b2c1cd; border-radius:999px; border:2px solid transparent; background-clip:padding-box; }
+
+  @media (max-width:760px) {
+    body { background-attachment:scroll !important; }
+    .page,.wrap,.app-shell { padding-left:max(8px,env(safe-area-inset-left)) !important; padding-right:max(8px,env(safe-area-inset-right)) !important; }
+    .toolbar {
+      top:max(5px,env(safe-area-inset-top)) !important;
+      border-radius:14px !important;
+      gap:7px !important;
+    }
+    .toolbar button,.toolbar .btn,.toolbar .filebtn { min-height:44px; }
+    .sheet,.report,.auto-card { border-radius:16px !important; }
+    .card { border-radius:14px !important; }
+  }
+}
+</style></head>
 <body>
 <main class="wrap">
 <div class="toolbar">
@@ -57,13 +340,12 @@ const SUBUNIDADES=['1ª CPRv','2ª CPRv','3ª CPRv','4ª CPRv','5ª CPRv','1ª C
 const TIPOS=['Blitz educativa','Palestra educativa','Roda de conversa','Ação em escola','Checkpoint educativo','Abordagem educativa individual','Distribuição orientada de material','Ação comunitária','Exposição/demonstração','Atividade lúdica','Oficina educativa','Outro'];
 const PUBLICOS=['Pedestres','Ciclistas','Motociclistas','Condutores de automóveis','Condutores profissionais','Passageiros','Crianças','Adolescentes','Idosos','Comunidade escolar','Pais ou responsáveis','Professores e gestores','Pessoas com deficiência','Sociedade em geral','Outro'];
 const METODOLOGIAS=['Palestra expositiva','Palestra dialogada','Roda de conversa','Abordagem individual','Orientação durante checkpoint','Distribuição de material com explicação verbal','Perguntas e respostas','Quiz ou dinâmica participativa','Demonstração de equipamentos de segurança','Simulação prática','Vídeo, slides ou recurso audiovisual','Atividade lúdica','Uso de mascote','Exposição de materiais','Oficina','Observação orientada do ambiente viário','Outro'];
-const RECURSOS=['Panfletos, folders ou cartilhas','Cartazes, faixas ou banners','Cones, cavaletes ou sinalização móvel','Viatura','Projetor ou televisão','Notebook ou tablet','Caixa de som ou microfone','Slides ou vídeos','Capacete demonstrativo','Cinto ou sistema de retenção infantil demonstrativo','Mascote','Material lúdico ou jogos','Mesas, cadeiras ou tenda','Prancheta ou lista de presença','Brindes educativos','Outro'];
+const RECURSOS=['Panfletos, folders ou cartilhas','Cartazes, faixas ou banners','Cones, cavaletes ou sinalização móvel','Viatura','Projetor ou televisão','Notebook ou tablet','Caixa de som ou microfone','Slides ou vídeos','Mascote','Material lúdico ou jogos','Mesas, cadeiras ou tenda','Brindes educativos','Outro'];
 const FONTES_CONTAGEM=['Contagem manual da equipe','Lista de presença','Número de veículos abordados','Informação fornecida pela escola ou instituição','Estimativa fundamentada da equipe','Outro'];
-const EVIDENCIAS=['Fotografias','Ordem de serviço','Lista de presença ou contagem de público','Material educativo utilizado','Registro da escola ou instituição parceira','Ficha de operação/checkpoint','Vídeo da atividade','Outro'];
+const EVIDENCIAS=['Fotografias','Ordem de serviço','Lista de presença ou contagem de público','Material educativo utilizado','Registro da escola ou instituição parceira','Vídeo da atividade','Outro'];
 const MENSAGEM_2026='DESACELERE. SEU BEM MAIOR É A VIDA.';
 const AJUDAS={
 observacoes:{titulo:'Informações comuns a todas as ações do dia',html:`<p>Use este campo somente para fatos que se aplicam a <strong>todas</strong> as ações registradas neste arquivo.</p><table class="small-table"><tr><th>Inclua</th><th>Não inclua</th></tr><tr><td>Nome de operação; parceiro comum; condição geral do serviço; orientação recebida; fato excepcional comum.</td><td>Descrição detalhada de cada palestra/checkpoint; público de cada local; horário específico; repetição dos militares.</td></tr></table><p><strong>Exemplo:</strong> “As ações integraram a Operação Maio Amarelo e foram realizadas em apoio à Secretaria Municipal de Educação.”</p>`},
-problema:{titulo:'Problema ou fator de risco enfrentado',html:`<p>Descreva o problema observado ou o comportamento de risco que motivou a orientação. Informe o que a equipe percebeu na realidade local, sem tentar classificar o produto PNATRANS.</p><ul><li>Uso incorreto ou ausência de capacete;</li><li>excesso de velocidade no trecho;</li><li>pedestres atravessando em local inseguro;</li><li>crianças transportadas sem dispositivo adequado;</li><li>uso do celular ao volante;</li><li>dúvidas frequentes de alunos sobre circulação segura;</li><li>necessidade de orientação em período de viagens ou festas.</li></ul><p>Evite expressões genéricas como “falta de educação”. Prefira fatos concretos e observáveis.</p>`},
 descricao:{titulo:'Como preencher a descrição detalhada da ação',html:`<p>Relate a execução em ordem simples e objetiva, permitindo que alguém que não estava presente compreenda o que ocorreu.</p><ul><li>Como o público foi reunido ou abordado;</li><li>como a atividade começou e se desenvolveu;</li><li>quais assuntos foram efetivamente explicados;</li><li>como houve interação, dúvidas, demonstrações ou entrega de materiais;</li><li>como a atividade foi encerrada;</li><li>intercorrências relevantes, sem inserir dados policiais sensíveis.</li></ul><p><strong>Exemplo:</strong> “Os condutores eram direcionados ao ponto seguro do checkpoint, recebiam orientação verbal sobre uso do capacete e velocidade e, ao final, recebiam material educativo.”</p>`},
 engenharia:{titulo:'O que significa associação à engenharia de trânsito?',html:`<p>Marque “Sim” quando a ação educativa estiver ligada a uma medida física, técnica ou operacional realizada na via para aumentar a segurança.</p><ul><li>Implantação ou renovação de faixa de pedestres;</li><li>nova sinalização vertical ou horizontal;</li><li>redução de limite de velocidade;</li><li>travessia elevada, redutor ou acalmamento de tráfego;</li><li>mudança de circulação, semáforo ou reorganização de cruzamento;</li><li>intervenção em área escolar, ciclovia ou iluminação.</li></ul><p>O simples uso de cones no checkpoint para organizar a equipe <strong>não</strong> caracteriza, por si só, associação à engenharia.</p>`}
 };
@@ -92,21 +374,21 @@ function adicionarAcao(data={}){const idx=document.querySelectorAll('.acao').len
 <label class="req" style="margin-top:9px">Público(s) participante(s)</label><div class="checks publicos-box">${checksHtml('a-publico-tipo',PUBLICOS,data.publicos||[])}</div><div class="conditional outro-publico hidden"><label>Outro público</label><input class="a-outropublico" value="${esc(data.outroPublico||'')}"></div>
 <div class="row" style="margin-top:9px"><div class="c2"><label>Idade mínima aprox.</label><input class="a-idademin" type="number" min="0" max="120" value="${esc(data.idadeMinima??'')}"></div><div class="c2"><label>Idade máxima aprox.</label><input class="a-idademax" type="number" min="0" max="120" value="${esc(data.idadeMaxima??'')}"></div><div class="c3"><label class="req">Público direto alcançado</label><input class="a-publicodireto" type="number" min="0" value="${esc(data.publicoDiretoAlcancado??'')}"></div><div class="c2"><label>Veículos abordados</label><input class="a-veiculos" type="number" min="0" value="${esc(data.veiculosAbordados??'')}"></div><div class="c3"><label>Quantidade de materiais distribuídos</label><input class="a-materiaisqtd" type="number" min="0" value="${esc(data.quantidadeMateriaisDistribuidos??'')}"></div></div>
 <label class="req">Fonte da contagem/estimativa</label><div class="checks fonte-box">${checksHtml('a-fonte',FONTES_CONTAGEM,data.fontesContagem||[])}</div><div class="conditional outra-fonte hidden"><label>Outra fonte da contagem</label><input class="a-outrafonte" value="${esc(data.outraFonteContagem||'')}"></div></div>
-<div class="subcard"><strong>Problema observado e descrição da execução</strong><div class="row"><div class="c12"><label class="req">Problema ou fator de risco enfrentado <button class="info-btn" type="button" onclick="abrirAjuda('problema')">ⓘ</button></label><textarea class="a-problema" placeholder="Descreva o problema concreto ou comportamento de risco observado.">${esc(data.problemaRisco||'')}</textarea></div><div class="c12"><label class="req">Descrição detalhada da ação <button class="info-btn" type="button" onclick="abrirAjuda('descricao')">ⓘ</button></label><textarea class="a-descricao" placeholder="Relate como a ação foi desenvolvida, os conteúdos tratados e a interação com o público.">${esc(data.descricaoDetalhada||'')}</textarea></div></div></div>
+<div class="subcard"><strong>Descrição da execução</strong><div class="row"><div class="c12"><label class="req">Descrição detalhada da ação <button class="info-btn" type="button" onclick="abrirAjuda('descricao')">ⓘ</button></label><textarea class="a-descricao" placeholder="Relate como a ação foi desenvolvida, os conteúdos tratados e a interação com o público.">${esc(data.descricaoDetalhada||'')}</textarea></div></div></div>
 <div class="subcard"><strong>Metodologia, associação e recursos</strong><label class="req">Metodologia(s) utilizada(s)</label><div class="checks metodo-box">${checksHtml('a-metodo',METODOLOGIAS,data.metodologias||[])}</div><div class="conditional outro-metodo hidden"><label>Outra metodologia</label><input class="a-outrometodo" value="${esc(data.outraMetodologia||'')}"></div>
 <div class="row" style="margin-top:9px"><div class="c4"><label class="req">A(s) ação(ões) foi/foram associadas à fiscalização?</label><select class="a-fiscalizacao"><option value="">Selecione</option>${['Sim','Não','Não foi possível informar'].map(x=>`<option ${data.associadaFiscalizacao===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="c4"><label class="req">A(s) ação(ões) foi/foram associadas à engenharia? <button class="info-btn" type="button" onclick="abrirAjuda('engenharia')">ⓘ</button></label><select class="a-engenharia"><option value="">Selecione</option>${['Sim','Não','Não foi possível informar'].map(x=>`<option ${data.associadaEngenharia===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="c4"><label class="req">Houve integração com outros órgãos?</label><select class="a-integracaooutros"><option value="">Selecione</option>${['Sim','Não'].map(x=>`<option ${data.houveIntegracaoOutrosOrgaos===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="c12"><label>Parceiros envolvidos</label><textarea class="a-parceiros" placeholder="Ex.: escola, prefeitura, órgão municipal de trânsito, DER, saúde, associação comunitária. Informe apenas quem efetivamente participou.">${esc(data.parceirosEnvolvidos||'')}</textarea></div></div>
 <label>Materiais e recursos empregados</label><div class="checks recursos-box">${checksHtml('a-recurso',RECURSOS,data.recursosEmpregados||[])}</div><div class="conditional outro-recurso hidden"><label>Outros materiais ou recursos</label><input class="a-outrorecurso" value="${esc(data.outrosRecursos||'')}"></div>
-<div class="row" style="margin-top:9px"><div class="c6"><label>Dificuldades/intercorrências operacionais observadas</label><textarea class="a-dificuldades" placeholder="Relate apenas fatos observados durante a execução.">${esc(data.dificuldadesOperacionais||'')}</textarea></div><div class="c6"><label>Pontos positivos observados</label><textarea class="a-positivos" placeholder="Ex.: boa participação, apoio da escola, local adequado, receptividade do público.">${esc(data.pontosPositivos||'')}</textarea></div></div></div>
+<div class="row" style="margin-top:9px"><div class="c6"><label>Aspectos negativos, dificuldades e intercorrências observadas</label><textarea class="a-dificuldades" placeholder="Relate apenas fatos observados durante a execução.">${esc(data.dificuldadesOperacionais||'')}</textarea></div><div class="c6"><label>Pontos positivos observados</label><textarea class="a-positivos" placeholder="Ex.: boa participação, apoio da escola, local adequado, receptividade do público.">${esc(data.pontosPositivos||'')}</textarea></div></div></div>
 <div class="subcard"><strong>Evidências disponíveis</strong><p class="hint">Marque apenas o que existe e será encaminhado ou pode ser localizado pelo NITE.</p><div class="checks evidencias-box">${checksHtml('a-evidencia',EVIDENCIAS,data.evidencias||[])}</div><div class="conditional outra-evidencia hidden"><label>Outra evidência</label><input class="a-outraevidencia" value="${esc(data.outraEvidencia||'')}"></div><div class="row" style="margin-top:9px"><div class="c12"><label>Referência dos arquivos/evidências</label><textarea class="a-refevidencias" placeholder="Ex.: 03 fotografias anexadas; OS nº ...; lista de presença entregue à direção.">${esc(data.referenciasEvidencias||'')}</textarea></div></div></div>`;
 document.getElementById('acoesLista').appendChild(div);
 const binds=[['.tipos-box','a-tipo','outro-tipo'],['.publicos-box','a-publico-tipo','outro-publico'],['.fonte-box','a-fonte','outra-fonte'],['.metodo-box','a-metodo','outro-metodo'],['.recursos-box','a-recurso','outro-recurso'],['.evidencias-box','a-evidencia','outra-evidencia']];binds.forEach(([box,cls,wrap])=>div.querySelector(box).addEventListener('change',()=>toggleOutro(div,cls,wrap)));div.querySelector('.a-msgaplicada').addEventListener('change',()=>toggleMensagem(div));div.querySelector('.a-data').addEventListener('change',()=>referenciaData(div));binds.forEach(([,cls,wrap])=>toggleOutro(div,cls,wrap));toggleMensagem(div);referenciaData(div);}
 function renumerarAcoes(){document.querySelectorAll('.acao .entry-title').forEach((x,i)=>x.textContent='Ação '+(i+1));}
 function getMilitares(){return [...document.querySelectorAll('.militar')].map(x=>({identificacao:x.querySelector('.m-id').value.trim(),funcao:x.querySelector('.m-funcao').value.trim()})).filter(x=>x.identificacao||x.funcao);}
 function getEquipes(){return [...document.querySelectorAll('.equipe')].map(x=>({descricao:x.querySelector('.e-desc').value.trim()})).filter(x=>x.descricao);}
-function getAcoes(){return [...document.querySelectorAll('.acao')].map((x,i)=>{const data=x.querySelector('.a-data').value,dt=data?new Date(data+'T12:00:00'):null;return {numero:i+1,data,mesReferencia:dt?dt.getMonth()+1:'',anoReferencia:dt?dt.getFullYear():'',periodoDia:x.querySelector('.a-periodo').value,horaInicio:x.querySelector('.a-hinicio').value,horaFim:x.querySelector('.a-hfim').value,municipio:x.querySelector('.a-municipio').value.trim(),localEspecifico:x.querySelector('.a-local').value.trim(),mensagemNacionalReferencial:MENSAGEM_2026,mensagemAplicada:x.querySelector('.a-msgaplicada').value,comoMensagemAplicada:x.querySelector('.a-msgcomo').value.trim(),tiposAcao:escolhidos(x,'a-tipo'),outroTipo:x.querySelector('.a-outrotipo').value.trim(),publicos:escolhidos(x,'a-publico-tipo'),outroPublico:x.querySelector('.a-outropublico').value.trim(),idadeMinima:x.querySelector('.a-idademin').value,idadeMaxima:x.querySelector('.a-idademax').value,publicoDiretoAlcancado:x.querySelector('.a-publicodireto').value,veiculosAbordados:x.querySelector('.a-veiculos').value,quantidadeMateriaisDistribuidos:x.querySelector('.a-materiaisqtd').value,fontesContagem:escolhidos(x,'a-fonte'),outraFonteContagem:x.querySelector('.a-outrafonte').value.trim(),problemaRisco:x.querySelector('.a-problema').value.trim(),descricaoDetalhada:x.querySelector('.a-descricao').value.trim(),metodologias:escolhidos(x,'a-metodo'),outraMetodologia:x.querySelector('.a-outrometodo').value.trim(),associadaFiscalizacao:x.querySelector('.a-fiscalizacao').value,associadaEngenharia:x.querySelector('.a-engenharia').value,houveIntegracaoOutrosOrgaos:x.querySelector('.a-integracaooutros').value,parceirosEnvolvidos:x.querySelector('.a-parceiros').value.trim(),recursosEmpregados:escolhidos(x,'a-recurso'),outrosRecursos:x.querySelector('.a-outrorecurso').value.trim(),dificuldadesOperacionais:x.querySelector('.a-dificuldades').value.trim(),pontosPositivos:x.querySelector('.a-positivos').value.trim(),evidencias:escolhidos(x,'a-evidencia'),outraEvidencia:x.querySelector('.a-outraevidencia').value.trim(),referenciasEvidencias:x.querySelector('.a-refevidencias').value.trim()};});}
+function getAcoes(){return [...document.querySelectorAll('.acao')].map((x,i)=>{const data=x.querySelector('.a-data').value,dt=data?new Date(data+'T12:00:00'):null;return {numero:i+1,data,mesReferencia:dt?dt.getMonth()+1:'',anoReferencia:dt?dt.getFullYear():'',periodoDia:x.querySelector('.a-periodo').value,horaInicio:x.querySelector('.a-hinicio').value,horaFim:x.querySelector('.a-hfim').value,municipio:x.querySelector('.a-municipio').value.trim(),localEspecifico:x.querySelector('.a-local').value.trim(),mensagemNacionalReferencial:MENSAGEM_2026,mensagemAplicada:x.querySelector('.a-msgaplicada').value,comoMensagemAplicada:x.querySelector('.a-msgcomo').value.trim(),tiposAcao:escolhidos(x,'a-tipo'),outroTipo:x.querySelector('.a-outrotipo').value.trim(),publicos:escolhidos(x,'a-publico-tipo'),outroPublico:x.querySelector('.a-outropublico').value.trim(),idadeMinima:x.querySelector('.a-idademin').value,idadeMaxima:x.querySelector('.a-idademax').value,publicoDiretoAlcancado:x.querySelector('.a-publicodireto').value,veiculosAbordados:x.querySelector('.a-veiculos').value,quantidadeMateriaisDistribuidos:x.querySelector('.a-materiaisqtd').value,fontesContagem:escolhidos(x,'a-fonte'),outraFonteContagem:x.querySelector('.a-outrafonte').value.trim(),descricaoDetalhada:x.querySelector('.a-descricao').value.trim(),metodologias:escolhidos(x,'a-metodo'),outraMetodologia:x.querySelector('.a-outrometodo').value.trim(),associadaFiscalizacao:x.querySelector('.a-fiscalizacao').value,associadaEngenharia:x.querySelector('.a-engenharia').value,houveIntegracaoOutrosOrgaos:x.querySelector('.a-integracaooutros').value,parceirosEnvolvidos:x.querySelector('.a-parceiros').value.trim(),recursosEmpregados:escolhidos(x,'a-recurso'),outrosRecursos:x.querySelector('.a-outrorecurso').value.trim(),dificuldadesOperacionais:x.querySelector('.a-dificuldades').value.trim(),pontosPositivos:x.querySelector('.a-positivos').value.trim(),evidencias:escolhidos(x,'a-evidencia'),outraEvidencia:x.querySelector('.a-outraevidencia').value.trim(),referenciasEvidencias:x.querySelector('.a-refevidencias').value.trim()};});}
 function coletar(){return {schema:'br.gov.pb.pmpb.bptran.pnatrans.equipe',version:'4.0',geradoEm:new Date().toISOString(),fixos:{unidade:'BPTran',nucleo:'NITE',mensagemNacional2026:MENSAGEM_2026},identificacao:{subunidades:[...document.querySelectorAll('.subunidade:checked')].map(x=>x.value),areaOPM:document.getElementById('areaOPM').value.trim(),municipiosRegiao:document.getElementById('municipiosRegiao').value.trim(),informacoesComuns:document.getElementById('observacoesGerais').value.trim()},militares:getMilitares(),equipes:getEquipes(),acoes:getAcoes()};}
 function marcar(el){if(el)el.classList.add('invalid');}
-function validar(){document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));const d=coletar(),erros=[];if(!d.identificacao.subunidades.length)erros.push('Selecione ao menos uma subunidade.');if(!d.identificacao.areaOPM){erros.push('Informe a área da OPM.');marcar(document.getElementById('areaOPM'));}if(!d.identificacao.municipiosRegiao){erros.push('Informe o município/região abrangida.');marcar(document.getElementById('municipiosRegiao'));}if(!d.militares.length||d.militares.some(x=>!x.identificacao))erros.push('Cadastre ao menos um militar com nome e posto/graduação.');if(!d.acoes.length)erros.push('Cadastre ao menos uma ação.');document.querySelectorAll('.acao').forEach((x,i)=>{const a=d.acoes[i],p='Ação '+(i+1)+': ';const req=[['data','data','.a-data'],['período do dia','periodoDia','.a-periodo'],['município','municipio','.a-municipio'],['local específico','localEspecifico','.a-local'],['público direto alcançado','publicoDiretoAlcancado','.a-publicodireto'],['problema/fator de risco','problemaRisco','.a-problema'],['descrição detalhada','descricaoDetalhada','.a-descricao'],['associação à fiscalização','associadaFiscalizacao','.a-fiscalizacao'],['associação à engenharia','associadaEngenharia','.a-engenharia'],['integração com outros órgãos','houveIntegracaoOutrosOrgaos','.a-integracaooutros'],['aplicação da mensagem nacional','mensagemAplicada','.a-msgaplicada']];req.forEach(([nome,k,sel])=>{if(a[k]===''){erros.push(p+'informe '+nome+'.');marcar(x.querySelector(sel));}});if(!a.tiposAcao.length){erros.push(p+'selecione ao menos um tipo de ação.');}if(a.tiposAcao.includes('Outro')&&!a.outroTipo){erros.push(p+'descreva o outro tipo de ação.');marcar(x.querySelector('.a-outrotipo'));}if(!a.publicos.length){erros.push(p+'selecione ao menos um público.');}if(a.publicos.includes('Outro')&&!a.outroPublico){erros.push(p+'descreva o outro público.');marcar(x.querySelector('.a-outropublico'));}if(!a.fontesContagem.length){erros.push(p+'informe a fonte da contagem/estimativa.');}if(a.fontesContagem.includes('Outro')&&!a.outraFonteContagem){erros.push(p+'descreva a outra fonte da contagem.');marcar(x.querySelector('.a-outrafonte'));}if(!a.metodologias.length){erros.push(p+'selecione ao menos uma metodologia.');}if(a.metodologias.includes('Outro')&&!a.outraMetodologia){erros.push(p+'descreva a outra metodologia.');marcar(x.querySelector('.a-outrometodo'));}if(a.recursosEmpregados.includes('Outro')&&!a.outrosRecursos){erros.push(p+'descreva os outros recursos empregados.');marcar(x.querySelector('.a-outrorecurso'));}if(!a.evidencias.length){erros.push(p+'selecione ao menos uma evidência disponível.');}if(a.evidencias.includes('Outro')&&!a.outraEvidencia){erros.push(p+'descreva a outra evidência.');marcar(x.querySelector('.a-outraevidencia'));}if(['Sim, diretamente','Sim, de forma adaptada'].includes(a.mensagemAplicada)&&!a.comoMensagemAplicada){erros.push(p+'explique como a mensagem nacional foi aplicada.');marcar(x.querySelector('.a-msgcomo'));}if(a.houveIntegracaoOutrosOrgaos==='Sim'&&!a.parceirosEnvolvidos){erros.push(p+'informe os parceiros envolvidos.');marcar(x.querySelector('.a-parceiros'));}if(a.idadeMinima&&a.idadeMaxima&&Number(a.idadeMinima)>Number(a.idadeMaxima))erros.push(p+'a idade mínima não pode superar a máxima.');const mensuravel=[a.publicoDiretoAlcancado,a.veiculosAbordados,a.quantidadeMateriaisDistribuidos].some(v=>Number(v)>0);if(!mensuravel)erros.push(p+'informe ao menos um quantitativo maior que zero: público, veículos ou materiais.');});return {ok:!erros.length,erros,dados:d};}
+function validar(){document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));const d=coletar(),erros=[];if(!d.identificacao.subunidades.length)erros.push('Selecione ao menos uma subunidade.');if(!d.identificacao.areaOPM){erros.push('Informe a área da OPM.');marcar(document.getElementById('areaOPM'));}if(!d.identificacao.municipiosRegiao){erros.push('Informe o município/região abrangida.');marcar(document.getElementById('municipiosRegiao'));}if(!d.militares.length||d.militares.some(x=>!x.identificacao))erros.push('Cadastre ao menos um militar com nome e posto/graduação.');if(!d.acoes.length)erros.push('Cadastre ao menos uma ação.');document.querySelectorAll('.acao').forEach((x,i)=>{const a=d.acoes[i],p='Ação '+(i+1)+': ';const req=[['data','data','.a-data'],['período do dia','periodoDia','.a-periodo'],['município','municipio','.a-municipio'],['local específico','localEspecifico','.a-local'],['público direto alcançado','publicoDiretoAlcancado','.a-publicodireto'],['descrição detalhada','descricaoDetalhada','.a-descricao'],['associação à fiscalização','associadaFiscalizacao','.a-fiscalizacao'],['associação à engenharia','associadaEngenharia','.a-engenharia'],['integração com outros órgãos','houveIntegracaoOutrosOrgaos','.a-integracaooutros'],['aplicação da mensagem nacional','mensagemAplicada','.a-msgaplicada']];req.forEach(([nome,k,sel])=>{if(a[k]===''){erros.push(p+'informe '+nome+'.');marcar(x.querySelector(sel));}});if(!a.tiposAcao.length){erros.push(p+'selecione ao menos um tipo de ação.');}if(a.tiposAcao.includes('Outro')&&!a.outroTipo){erros.push(p+'descreva o outro tipo de ação.');marcar(x.querySelector('.a-outrotipo'));}if(!a.publicos.length){erros.push(p+'selecione ao menos um público.');}if(a.publicos.includes('Outro')&&!a.outroPublico){erros.push(p+'descreva o outro público.');marcar(x.querySelector('.a-outropublico'));}if(!a.fontesContagem.length){erros.push(p+'informe a fonte da contagem/estimativa.');}if(a.fontesContagem.includes('Outro')&&!a.outraFonteContagem){erros.push(p+'descreva a outra fonte da contagem.');marcar(x.querySelector('.a-outrafonte'));}if(!a.metodologias.length){erros.push(p+'selecione ao menos uma metodologia.');}if(a.metodologias.includes('Outro')&&!a.outraMetodologia){erros.push(p+'descreva a outra metodologia.');marcar(x.querySelector('.a-outrometodo'));}if(a.recursosEmpregados.includes('Outro')&&!a.outrosRecursos){erros.push(p+'descreva os outros recursos empregados.');marcar(x.querySelector('.a-outrorecurso'));}if(!a.evidencias.length){erros.push(p+'selecione ao menos uma evidência disponível.');}if(a.evidencias.includes('Outro')&&!a.outraEvidencia){erros.push(p+'descreva a outra evidência.');marcar(x.querySelector('.a-outraevidencia'));}if(['Sim, diretamente','Sim, de forma adaptada'].includes(a.mensagemAplicada)&&!a.comoMensagemAplicada){erros.push(p+'explique como a mensagem nacional foi aplicada.');marcar(x.querySelector('.a-msgcomo'));}if(a.houveIntegracaoOutrosOrgaos==='Sim'&&!a.parceirosEnvolvidos){erros.push(p+'informe os parceiros envolvidos.');marcar(x.querySelector('.a-parceiros'));}if(a.idadeMinima&&a.idadeMaxima&&Number(a.idadeMinima)>Number(a.idadeMaxima))erros.push(p+'a idade mínima não pode superar a máxima.');const mensuravel=[a.publicoDiretoAlcancado,a.veiculosAbordados,a.quantidadeMateriaisDistribuidos].some(v=>Number(v)>0);if(!mensuravel)erros.push(p+'informe ao menos um quantitativo maior que zero: público, veículos ou materiais.');});return {ok:!erros.length,erros,dados:d};}
 function verificarPendencias(){const v=validar();if(v.ok)status('Não foram encontradas pendências obrigatórias. O arquivo está pronto para ser encaminhado ao NITE.','ok');else status('Pendências: '+v.erros.join(' | '),'error');return v;}
 function slug(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toUpperCase();}
 function hashConteudo(texto){let h=2166136261;for(let i=0;i<texto.length;i++){h^=texto.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase();}
